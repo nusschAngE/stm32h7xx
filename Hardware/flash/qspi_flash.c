@@ -204,7 +204,7 @@ static uint8_t w25qxxx_WriteEnableState(void)
     uint8_t tempSR = 0;
     uint8_t ret = 0;
 
-    ret = w25qxxx_ReadSR(SPIFlash, W25Qxxx_SR1, &tempSR);
+    ret = w25qxxx_ReadSR(W25Qxxx_SR1, &tempSR);
     printf("w25qxxx_ReadSR, ret = %d, reg = 0x%02x\r\n", ret, tempSR);
     if(ret == F_OPR_OK)
     {
@@ -752,7 +752,7 @@ void SPIFlash_Init(void)
     ShortDelay(100);
     SPIFlash_DevideInit();
     /* enable write operate */
-    ret = w25qxxx_WriteEnable()
+    ret = w25qxxx_WriteEnable();
     printf("enable write operate, ret = %d\r\n", ret);
 
     /* enable QSPI mode */

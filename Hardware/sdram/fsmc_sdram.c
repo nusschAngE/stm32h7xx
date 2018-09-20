@@ -170,7 +170,7 @@ static uint8_t sdram_HardwareInit(void)
     *   SDRAM clock frequency -> 100mhz
     *   SDRAM refresh rate -> 64 * 1000 / 8192 = 7.81us
     *
-    *   COUNT = 7.81(us) * 100(mhz) - 20 = 781
+    *   COUNT = 7.81(us) * 100(mhz) #- 20# = 781
     */
     HAL_SDRAM_ProgramRefreshRate(&SDRAM_Handler, 781);
 		

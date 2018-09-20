@@ -3,6 +3,7 @@
 #include "main.h"
 #include "system.h"
 
+#include "font.h"
 #include "delay.h"
 #include "usart_printf.h"
 
@@ -11,9 +12,6 @@
 #include "mcu_lcd.h"
 #include "key_pad.h"
 #include "qspi_flash.h"
-
-#include "font_update.h"
-#include "font_display.h"
 
 //#include "led_task.h"
 
@@ -27,6 +25,9 @@ int main(void)
     System_SCBCacheConfig();
     System_MPUConfig();
 
+    /* SDRAM init firstly */
+    SDRAM_Init();
+
     /* system init */
     Delay_Init();
     USART_PrintfInit(115200);
@@ -34,10 +35,8 @@ int main(void)
     delay_ms(50);
 	printf("system starting...\r\n");
     
-    SDRAM_Init();
     SPIFlash_Init();
     LED_Init();
-    
     LCD_Init();
 
     /* user app */
