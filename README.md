@@ -14,5 +14,4 @@ apollo stm32h7xx development board
  
 
 # push note
-## chAngE : 2018-09-20
- SDRAM & LCD & LED debug done.
+ **2018-09-20** : SDRAM & LCD & LED debug done.
