@@ -12,3 +12,7 @@ apollo stm32h7xx development board
  KEY | none | GPIO | KEY1->wakeup/normal, KEY123->normal
  LED | none | GPIO | red, green
  
+
+# push note
+ **2018-09-20**
+ SDRAM & LCD & LED debug done.
