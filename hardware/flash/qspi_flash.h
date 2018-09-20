@@ -76,34 +76,35 @@ typedef enum
 
 typedef struct
 {
+    uint8_t SPIMode;
+    uint8_t AddressMode;
+    uint8_t bWrite;//write enable?
+    uint8_t pWrite;//write protect?
+    uint8_t state;
+
     uint32_t id;
     uint32_t memorySize; //total bytes
     uint32_t pageSize;   //bytes per page
     uint32_t sectorSize; //bytes per sector
     uint32_t totalSector;
     uint32_t blockSize;  //bytes per block   
-    uint32_t totalBlock;
-    uint8_t SPIMode;
-    uint8_t AddressMode;
-    uint8_t bWrite;//write enable?
-    uint8_t pWrite;//write protect?
-    uint8_t state;
+    uint32_t totalBlock;	
 }SPIFlashDevice;
 
 /* SPI Flash device struct */
-extern SPIFlashDevice SPIFlash;
+extern SPIFlashDevice QFlash;
 
 /* public function */
-void SPIFlash_Init(void);
-void SPIFlash_DevideInit(void);
-uint8_t SPIFlash_EraseSector(uint32_t sectorAddr, uint32_t sectorNbr);
-uint8_t SPIFlash_Read(uint8_t *pBuff, uint32_t Addr, uint16_t rSize);
+void qspiflash_init(void);
+void qspiflash_DeviceInit(void);
+uint8_t qspiflash_EraseSectors(uint32_t sectorAddr, uint32_t sectorNbr);
+uint8_t qspiflash_read(uint8_t *pBuff, uint32_t Addr, uint16_t rSize);
 /* SPI Flash write, not check */
-uint8_t SPIFlash_Write(uint8_t *pBuff, uint32_t Addr, uint32_t wSize);
+uint8_t qspiflash_write(uint8_t *pBuff, uint32_t Addr, uint32_t wSize);
 /* SPI Flash write with check*/
-uint8_t SPIFlash_Write_Erase(uint8_t *pBuff, uint32_t Addr, uint32_t wSize);
+uint8_t qspiflash_WriteWithErase(uint8_t *pBuff, uint32_t Addr, uint32_t wSize);
 
-void SPIFlash_RWTest(void);
+void qspiflash_RWTest(void);
 
 
 

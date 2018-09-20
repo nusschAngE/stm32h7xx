@@ -4,7 +4,7 @@
 
 #include "public.h"
 
-extern void USART_PrintfInit(uint32_t BaudRate);
+extern void usart_PrintfInit(uint32_t BaudRate);
 
 extern int printf(const char *format, ...);
 

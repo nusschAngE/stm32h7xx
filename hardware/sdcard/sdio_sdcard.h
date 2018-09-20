@@ -1,7 +1,9 @@
 #ifndef _SDIO_SDCARD_H
 #define _SDIO_SDCARD_H
 
-#include "public"
+#include "stm32h7xx.h"
+#include "public.h"
+#include "delay.h"
 
 typedef enum
 {
@@ -31,11 +33,11 @@ typedef enum
 extern HAL_SD_CardInfoTypeDef SDCardInfo;
 
 /*public function*/
-uint8_t SDCard_Init(void);
-uint8_t SDCard_GetState(void);
-uint8_t SDCard_EraseBlock(uint32_t StartBlock, uint32_t EndBlock);
-uint8_t SDCard_ReadMultipleBlock(uint8_t *pBuff, uint32_t BlockAddr, uint32_t BlockNbr);
-uint8_t SDCard_WriteMultipleBlock(uint8_t *pData, uint32_t BlockAddr, uint32_t BlockNbr);
+uint8_t sdcard_init(void);
+uint8_t sdcard_GetState(void);
+uint8_t sdcard_EraseBlocks(uint32_t StartBlock, uint32_t EndBlock);
+uint8_t sdcard_ReadMultipleBlocks(uint8_t *pBuff, uint32_t BlockAddr, uint32_t BlockNbr);
+uint8_t sdcard_WriteMultipleBlocks(uint8_t *pData, uint32_t BlockAddr, uint32_t BlockNbr);
 
 
 

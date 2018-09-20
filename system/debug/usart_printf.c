@@ -24,7 +24,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     HAL_GPIO_Init(GPIOA, &GPIO_Init);	   		  
 }
 
-static void DebuUSART_Init(uint32_t BaudRate)
+static void DebugUSART_Init(uint32_t BaudRate)
 {
 	DBGUart_Handler.Instance = USART1;					
 	DBGUart_Handler.Init.BaudRate = BaudRate;				  
@@ -42,9 +42,9 @@ static void DebuUSART_Init(uint32_t BaudRate)
 
 /*********** usart debug configuration *************/
 
-void USART_PrintfInit(uint32_t BaudRate)
+void usart_PrintfInit(uint32_t BaudRate)
 {
-    DebuUSART_Init(BaudRate);
+    DebugUSART_Init(BaudRate);
 }
 
 /********** printf config ***********/

@@ -9,7 +9,7 @@ volatile uint32_t delay_ticks = 0;
 *   config system tick first, 1KHz
 *   called after SysTick_Config(1KHz)
 */
-void Delay_Init(void)
+void delay_ModuleInit(void)
 {
     delay_ticks = 0;
 }

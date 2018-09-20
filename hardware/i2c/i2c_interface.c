@@ -157,7 +157,7 @@ static uint8_t gpio_iic_readByte(uint8_t ack)
 }
 
 /******************** public function *************************/
-void IIC_Init(void)
+void i2c_init(void)
 {
     GPIO_InitTypeDef GPIO_Init;
 
@@ -173,7 +173,7 @@ void IIC_Init(void)
     IIC_SDA_H();
 }
 
-uint8_t IIC_SendOneByte(uint8_t Addr, uint8_t sVal)
+uint8_t i2c_SendOneByte(uint8_t Addr, uint8_t sVal)
 {
     gpio_iic_start();
     gpio_iic_sendByte(Addr);
@@ -194,12 +194,12 @@ uint8_t IIC_SendOneByte(uint8_t Addr, uint8_t sVal)
     return 1;
 }
 
-uint8_t IIC_SendMultipleBytes(uint8_t Addr, uint8_t* pVal, uint32_t size)
+uint8_t i2c_SendMultipleBytes(uint8_t Addr, uint8_t* pVal, uint32_t size)
 {
     return 0;
 }
 
-uint8_t IIC_ReadOneByte(uint8_t Addr, uint8_t* rVal)
+uint8_t i2c_ReadOneByte(uint8_t Addr, uint8_t* rVal)
 {
     gpio_iic_start();
     gpio_iic_sendByte(Addr);
@@ -214,7 +214,7 @@ uint8_t IIC_ReadOneByte(uint8_t Addr, uint8_t* rVal)
     return 1;
 }
 
-uint8_t IIC_ReadMultipleBytes(uint8_t Addr, uint8_t* pVal, uint32_t size)
+uint8_t i2c_ReadMultipleBytes(uint8_t Addr, uint8_t* pVal, uint32_t size)
 {
     return 0;
 }

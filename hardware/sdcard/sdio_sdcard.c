@@ -65,7 +65,7 @@ static uint8_t sdcard_HardwareInit(void)
 /*
 *   SD Card initialize 
 */
-uint8_t SDCard_Init(void)
+uint8_t sdcard_init(void)
 {
     sdcard_ControllerInit();
 
@@ -79,7 +79,7 @@ uint8_t SDCard_Init(void)
     }
 }
 
-uint8_t SDCard_GetState(void)
+uint8_t sdcard_GetState(void)
 {
     HAL_SD_CardStateTypedef stat;
 
@@ -98,7 +98,7 @@ uint8_t SDCard_GetState(void)
     }
 }
 
-uint8_t SDCard_EraseBlock(uint32_t StartBlock, uint32_t EndBlock)
+uint8_t sdcard_EraseBlocks(uint32_t StartBlock, uint32_t EndBlock)
 {
     if(HAL_SD_Erase(&SD_Handler, StartBlock, EndBlock) == HAL_OK)
         return SD_RET_OK;
@@ -107,7 +107,7 @@ uint8_t SDCard_EraseBlock(uint32_t StartBlock, uint32_t EndBlock)
 }
 
 /* SD Card read blocks */
-uint8_t SDCard_ReadMultipleBlock(uint8_t *pBuff, uint32_t BlockAddr, uint32_t BlockNbr)
+uint8_t sdcard_ReadMultipleBlocks(uint8_t *pBuff, uint32_t BlockAddr, uint32_t BlockNbr)
 {
     uint8_t ret = SD_RET_ErrREAD;
     uint8_t check = 0xff;
@@ -116,7 +116,7 @@ uint8_t SDCard_ReadMultipleBlock(uint8_t *pBuff, uint32_t BlockAddr, uint32_t Bl
     if(ret == HAL_OK)
     {
         ret = SD_RET_OK;
-        while(SDCard_GetState() != SD_STATE_READY)
+        while(sdcard_GetState() != SD_STATE_READY)
         {
             ShortDelay(150);
             if(--check == 0)
@@ -134,7 +134,7 @@ uint8_t SDCard_ReadMultipleBlock(uint8_t *pBuff, uint32_t BlockAddr, uint32_t Bl
 }
 
 /* SD Card write blocks */
-uint8_t SDCard_WriteMultipleBlock(uint8_t *pData, uint32_t BlockAddr, uint32_t BlockNbr)
+uint8_t sdcard_WriteMultipleBlocks(uint8_t *pData, uint32_t BlockAddr, uint32_t BlockNbr)
 {
     uint8_t ret = SD_RET_ErrREAD;
     uint8_t check = 0xff;
@@ -143,7 +143,7 @@ uint8_t SDCard_WriteMultipleBlock(uint8_t *pData, uint32_t BlockAddr, uint32_t B
     if(ret == HAL_OK)
     {
         ret = SD_RET_OK;
-        while(SDCard_GetState() != SD_STATE_READY)
+        while(sdcard_GetState() != SD_STATE_READY)
         {
             ShortDelay(150);
             if(--check == 0)

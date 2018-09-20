@@ -9,11 +9,9 @@
 
 #include "fsmc_sdram.h"
 #include "led.h"
-#include "mcu_lcd.h"
-#include "key_pad.h"
+#include "mpu_lcd.h"
+#include "keypad.h"
 #include "qspi_flash.h"
-
-//#include "led_task.h"
 
 
 int main(void)
@@ -21,23 +19,23 @@ int main(void)
 	uint32_t Value = 0, Count = 0;
 	
     /* mcu configuration */
-    System_RCCConfig();
-    System_SCBCacheConfig();
-    System_MPUConfig();
+    system_RCCConfig();
+    system_SCBCacheConfig();
+    system_MPUConfig();
 
     /* SDRAM init firstly */
-    SDRAM_Init();
+    sdram_init();
 
     /* system init */
-    Delay_Init();
-    USART_PrintfInit(115200);
+    delay_ModuleInit();
+    usart_PrintfInit(115200);
     /* hardware configuration */
     delay_ms(50);
 	printf("system starting...\r\n");
     
-    SPIFlash_Init();
-    LED_Init();
-    LCD_Init();
+    qspiflash_init();
+    led_init();
+    lcd_init();
 
     /* user app */
 
@@ -54,11 +52,11 @@ int main(void)
 /*
 *   add demo code here
 */
-    LED_Onoff(&ledRed, TRUE);
-    LED_Onoff(&ledGreen, TRUE);
+    led_setOnOff(&ledRed, TRUE);
+    led_setOnOff(&ledGreen, TRUE);
 
     printf("demo start...\r\n");
-	LCD_ShowString(10, 10, "demo start...", FONT_ASC1608, 0xffff, 0x0000);
+	lcd_ShowString(10, 10, "demo start...", FONT_ASC1608, 0xffff, 0x0000);
     
 #if 0
 	SDRAM_RWTestFunc();
@@ -66,16 +64,16 @@ int main(void)
 #endif
 
 #if 1
-    SPIFlash_RWTest();
+    qspiflash_RWTest();
 #endif    
 
 	while(1)
 	{
-	    LED_Onoff(&ledRed, TRUE);
-	    LED_Onoff(&ledGreen, FALSE);
+	    led_setOnOff(&ledRed, TRUE);
+	    led_setOnOff(&ledGreen, FALSE);
 		delay_ms(500);
-		LED_Onoff(&ledRed, FALSE);
-	    LED_Onoff(&ledGreen, TRUE);
+		led_setOnOff(&ledRed, FALSE);
+	    led_setOnOff(&ledGreen, TRUE);
 		delay_ms(500);
 	}
 #endif	

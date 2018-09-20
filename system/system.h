@@ -15,11 +15,11 @@ typedef struct
 
 extern SystemClock_Struct SystemClock;
 
-extern void System_RCCConfig(void);
-extern void System_PLL2Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r);
-extern void System_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r);
-extern void System_SCBCacheConfig(void);
-extern void System_MPUConfig(void);
+extern void system_RCCConfig(void);
+extern void system_PLL2Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r);
+extern void system_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r);
+extern void system_SCBCacheConfig(void);
+extern void system_MPUConfig(void);
 
 
 

@@ -3,6 +3,9 @@
 #include "fsmc_sdram.h"
 #include "delay.h"
 
+/*  */
+#define SDRAM_ADDRESS           (0xc0000000)/* FMC Bank5 SDRAM */
+
 /* SDRAM mode register */
 #define SDRAM_MODEREG_BURST_LENGTH_1             ((uint16_t)0x0000)
 #define SDRAM_MODEREG_BURST_LENGTH_2             ((uint16_t)0x0001)
@@ -24,7 +27,7 @@ static SDRAM_HandleTypeDef SDRAM_Handler;
 /****************** private function ************************/
 
 /* send SDRAM command */
-static uint8_t SDRAM_SendCommand(uint8_t Bank, uint8_t Cmd, uint8_t Refresh, uint32_t RegVal)
+static uint8_t sdram_SendCommand(uint8_t Bank, uint8_t Cmd, uint8_t Refresh, uint32_t RegVal)
 {
     uint32_t TargeBank = 0;
     FMC_SDRAM_CommandTypeDef Command;
@@ -142,10 +145,10 @@ static uint8_t sdram_HardwareInit(void)
 {
     uint32_t temp = 0;
 
-    SDRAM_SendCommand(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); //sdram clock enable
+    sdram_SendCommand(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); //sdram clock enable
     delay_us(500);                                        //must delay more than 200us
-	SDRAM_SendCommand(0, FMC_SDRAM_CMD_PALL, 1, 0);       //Precharge 
-    SDRAM_SendCommand(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);//auto refresh times
+	sdram_SendCommand(0, FMC_SDRAM_CMD_PALL, 1, 0);       //Precharge 
+    sdram_SendCommand(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);//auto refresh times
 
     /*
     *   mode register
@@ -161,7 +164,7 @@ static uint8_t sdram_HardwareInit(void)
             | SDRAM_MODEREG_CAS_LATENCY_3           	
             | SDRAM_MODEREG_OPERATING_MODE_STANDARD   
             | SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;    
-    SDRAM_SendCommand(0,FMC_SDRAM_CMD_LOAD_MODE,1,temp); 
+    sdram_SendCommand(0,FMC_SDRAM_CMD_LOAD_MODE,1,temp); 
 
     /*
     *   SDRAM refresh rate
@@ -180,14 +183,14 @@ static uint8_t sdram_HardwareInit(void)
 /******************* public function *********************************/
 
 /* SDRAM hardware initialize */
-void SDRAM_Init(void)
+void sdram_init(void)
 {
     sdram_ControllerInit();
     delay_us(500);
     sdram_HardwareInit();
 }
 
-void SDRAM_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *bWrite)
+void Ssdram_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *bWrite)
 {
     uint32_t bw = 0;
 
@@ -209,7 +212,7 @@ void SDRAM_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *
     *bWrite = bw;
 }
 
-void SDRAM_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *bRead)
+void sdram_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *bRead)
 {
     uint32_t br = 0;
 
@@ -233,7 +236,7 @@ void SDRAM_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *b
 
 #if 0
 /* SDRAM read&write test function */
-void SDRAM_RWTestFunc(void)
+void sdram_RWTestFunc(void)
 {
 	#define TSIZE	(4096)
 	static uint16_t Tbuff[TSIZE];
@@ -282,7 +285,7 @@ uint16_t testSdram2[TEST_SZIE] __attribute__((section(".ARM.__at_0xC0010000")));
 uint16_t testSdram3[TEST_SZIE] __attribute__((section(".ARM.__at_0xC0100000")));
 uint16_t testSdram4[TEST_SZIE] __attribute__((section(".ARM.__at_0xC1000000")));
 
-void SDRAM_RAMTestFunc(void)
+void sdram_RAMTestFunc(void)
 {
     uint16_t *pTest = NULL;
     volatile uint16_t temp = 0;

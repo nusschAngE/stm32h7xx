@@ -3,7 +3,7 @@
 #define _FONT_H_
 
 #include "public.h"
-
+#include "ff.h"
 
 /*
 *   ASCII Font 
@@ -50,9 +50,9 @@ typedef struct
 
 
 /* font in flash */
-_FontInfo FontInfo;
+extern _FontInfo FontInfo;
 
-extern void HZKFont_Update(TCHAR *drv);
+extern void font_update(TCHAR *drv);
 
 
 

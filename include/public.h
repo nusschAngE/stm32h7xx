@@ -37,14 +37,6 @@ typedef unsigned char bool;
 
 
 
-/******** public function *********/
-
-extern void *memset(void *s, int ch, size_t n);
-
-
-
-
-
 
 
 

@@ -14,7 +14,7 @@ extern volatile uint32_t delay_ticks;
 
 
 
-extern void Delay_Init(void);
+extern void delay_ModuleInit(void);
 extern void delay_us(uint32_t us);
 extern void delay_ms(uint32_t ms);
 extern void ShortDelay(uint16_t ticks);

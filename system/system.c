@@ -9,7 +9,7 @@ SystemClock_Struct SystemClock;
 *   system clock configuration
 *   must be called firstly in main()
 */
-void System_RCCConfig(void)
+void system_RCCConfig(void)
 {
 
   	RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -127,7 +127,7 @@ void System_RCCConfig(void)
 *   system pll2 configuration
 *   it will disable PLL2 firstly, must be carefal
 */
-void System_PLL2Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r)
+void system_PLL2Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r)
 {
     /* Check that PLL2 OSC clock source is already set */
     if(__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_NONE)
@@ -155,7 +155,7 @@ void System_PLL2Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t 
 *   system pll3 configuration
 *   it will disable PLL3 firstly, must be carefal
 */
-void System_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r)
+void system_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t r)
 {
     /* Check that PLL3 OSC clock source is already set */
     if(__HAL_RCC_GET_PLL_OSCSOURCE() == RCC_PLLSOURCE_NONE)
@@ -180,7 +180,7 @@ void System_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, uint32_t 
 }
 
 /* DCache & ICache configuration */
-void System_SCBCacheConfig(void)
+void system_SCBCacheConfig(void)
 {
     SCB_EnableDCache();
     SCB_EnableICache();
@@ -189,7 +189,7 @@ void System_SCBCacheConfig(void)
 }
 
 /* MPU configuration */
-void System_MPUConfig(void)
+void system_MPUConfig(void)
 {
 	MPU_Region_InitTypeDef MPU_Initure;
 

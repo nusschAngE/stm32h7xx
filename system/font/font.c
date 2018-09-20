@@ -1,6 +1,7 @@
 
 #include "font.h"
 #include "ff.h"
+#include "qspi_flash.h"
 
 /*  Update Font 
 **/
@@ -27,10 +28,6 @@ static const char *FontUpdatePath[] =
 /* font in flash */
 _FontInfo FontInfo;
 
-
-
-
-
 /*  update Font data, need file system.
 *   save this data to SPI Flash
 *
@@ -43,7 +40,7 @@ _FontInfo FontInfo;
 *               2 -> font type error
 *               3 -> write error
 */
-static uint8_t Font_ProcUpdate(uint8_t font, TCHAR *path)
+static uint8_t font_ProcUpdate(uint8_t font, TCHAR *path)
 {
     FIL FontFIL;
 
@@ -58,7 +55,6 @@ static uint8_t Font_ProcUpdate(uint8_t font, TCHAR *path)
 
     if(font >= FONT_UPDATE_NUM)
     {
-        f_close(&FontFIL);
         return 2;
     }
     else if(font == FONT_UPDATE_INFO)
@@ -114,7 +110,7 @@ static uint8_t Font_ProcUpdate(uint8_t font, TCHAR *path)
         }
 
         /* write data to flash */
-        sf_ret = SPIFlash_Write(tempBuf, beginAddr + ofs, br);
+        sf_ret = qspiflash_write(tempBuf, beginAddr + ofs, br);
         if(sf_ret != F_OPR_OK)
         {
             break;
@@ -144,7 +140,7 @@ static uint8_t Font_ProcUpdate(uint8_t font, TCHAR *path)
 *
 *   @para drv : disk drive["0:" sd, "1:" usb, "2:" nand]
 */
-void Font_Update(TCHAR *drv)
+void font_update(TCHAR *drv)
 {
     FIL FontFIL;
     FRESULT f_ret;
@@ -169,7 +165,7 @@ void Font_Update(TCHAR *drv)
     }
 
     //lcd debug out : flash erase
-    sf_ret = SPIFlash_EraseSector(FONT_STARTSECTOR, FONT_PRESECTOR);
+    sf_ret = qspiflash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
     if(sf_ret != F_OPR_OK)
     {
         //lcd debug out : erase error
@@ -183,7 +179,7 @@ void Font_Update(TCHAR *drv)
         strcpy((char *)FontSrc, (char *)drv);
         strcat((char *)FontSrc, (char *)FontUpdatePath[font]);
 
-        sf_ret = Font_ProcUpdate(font, (TCHAR *)FontSrc);
+        sf_ret = font_ProcUpdate(font, (TCHAR *)FontSrc);
         if(f_ret != 0)
         {
             //lcd debug out : update x error

@@ -38,9 +38,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32h7xx_it.h"
-
+#include "stm32h7xx.h"
 #include "delay.h"
-#include "task_led.h"
 
 /** @addtogroup STM32H7xx_HAL_Examples
   * @{
@@ -163,12 +162,6 @@ void SysTick_Handler(void)
     if(delay_ticks)
     {
         delay_ticks--;
-    }
-
-    /* led blink tick */
-    if(ledTaskTick)
-    {
-        ledTaskTick--;
     }
 }
 
