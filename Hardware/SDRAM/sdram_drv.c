@@ -146,7 +146,7 @@ static uint8_t sdram_HardwareInit(void)
     uint32_t temp = 0;
 
     sdram_SendCommand(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); //sdram clock enable
-    delay_us(500);                                        //must delay more than 200us
+    uSleep(300);                                        //must delay more than 200us
 	sdram_SendCommand(0, FMC_SDRAM_CMD_PALL, 1, 0);       //Precharge 
     sdram_SendCommand(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);//auto refresh times
 
@@ -186,7 +186,7 @@ static uint8_t sdram_HardwareInit(void)
 void sdram_Init(void)
 {
     sdram_ControllerInit();
-    delay_us(500);
+    uSleep(500);
     sdram_HardwareInit();
 }
 

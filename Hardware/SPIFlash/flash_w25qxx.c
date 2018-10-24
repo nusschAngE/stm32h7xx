@@ -179,7 +179,7 @@ static void W25Qxx_Reset(void)
 	                    	QSPI_ADDRESS_NONE, QSPI_ADDRESS_8_BITS, 
 	                    	QSPI_DATA_NONE);
 		/* delay */
-	    delay_ms(10);
+	    uSleep(10000);
 	    /* send reset enable */
 	    QSPI_SendCommand(W25Q_RESET, 0, 
 	                   		0, QSPI_INSTRUCTION_1_LINE, 
@@ -194,7 +194,7 @@ static void W25Qxx_Reset(void)
 	                    	QSPI_ADDRESS_NONE, QSPI_ADDRESS_8_BITS, 
 	                    	QSPI_DATA_NONE);
 		/* delay */
-	    delay_ms(10);
+	    uSleep(10000);
 	    /* send reset enable */
 	    QSPI_SendCommand(W25Q_RESET, 0, 
 	                   		0, QSPI_INSTRUCTION_4_LINES, 
@@ -238,7 +238,7 @@ static void W25Qxx_WriteEnable(void)
 	}
 
 #if 0//debug
-    delay_ms(100);
+    uSleep(10000);
     if(W25Qxx_IsWriteEnable() == FALSE)
     {
         printf("w25qxx write disable!\r\n");
@@ -690,8 +690,7 @@ static bool W25Qxx_WaitBusy(uint32_t timeout)
      	    return TRUE;
      	}
 
-     	//ShortDelay(5000);
-     	delay_ms(5);
+     	uSleep(5000);
     }
 
     return (FALSE);
@@ -704,7 +703,7 @@ static uint8_t W25Qxx_EraseSector(uint32_t sector)
     uint8_t ret = 0;
 
     W25Qxx_WriteEnable();
-    delay_ms(100);
+    uSleep(50000);
     if(W25Qxx_IsWriteEnable() == FALSE)
     {
     	printf("W25Qxx Erase Sector[%d], write disable\r\n", sector);
@@ -758,7 +757,7 @@ static uint8_t W25Qxx_PageProgram(uint8_t *pBuff, uint32_t Address, uint16_t wSi
     uint8_t ret = 0;
 
     W25Qxx_WriteEnable();
-    delay_ms(200);
+    uSleep(50000);
     if(W25Qxx_IsWriteEnable() == FALSE)
     {
     	printf("W25Qxx_PageProgram, write diable, address = 0x%08x\r\n", Address);
@@ -917,12 +916,12 @@ void SPIFlash_Init(void)
 	QFlashSPIMode = SerialSPI;
     /* QSPI initialize */
     QSPI_Init();
-    delay_ms(10);
+    uSleep(10000);
     //W25Qxx_Reset();
     //W25Qxx_WaitBusy(0xfff);
     /* enable QSPI mode */
     W25Qxx_QSPIEnable();
-    delay_ms(50);
+    uSleep(50000);
     /* get flash id */
     DeviceID = W25Qxx_GetDeviceID();
     printf("Get flash ID, DeviceID = 0x%04x\r\n", DeviceID);

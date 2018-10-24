@@ -118,7 +118,7 @@ uint8_t sdcard_ReadMultipleBlocks(uint8_t *pBuff, uint32_t BlockAddr, uint32_t B
         ret = SD_RET_OK;
         while(sdcard_GetState() != SD_STATE_READY)
         {
-            ShortDelay(150);
+            uSleep(150);
             if(--check == 0)
             {
                 ret = SD_RET_ErrTIMEOUT;
@@ -145,7 +145,7 @@ uint8_t sdcard_WriteMultipleBlocks(uint8_t *pData, uint32_t BlockAddr, uint32_t 
         ret = SD_RET_OK;
         while(sdcard_GetState() != SD_STATE_READY)
         {
-            ShortDelay(150);
+            uSleep(150);
             if(--check == 0)
             {
                 ret = SD_RET_ErrTIMEOUT;

@@ -4,14 +4,14 @@
 #define _PUBLIC_H
 
 #include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-
+/******** uC/OS ***********/
+#define RTOS_uCOS_II    1U
 
 /******* boolean ********/
+typedef unsigned int  size_t;
 typedef unsigned char bool;
+
 
 #undef TRUE
 #define TRUE	(1)
@@ -33,11 +33,11 @@ typedef unsigned char bool;
 #endif
 
 
-
-
-
-
-
+/**************************************/
+extern int myStrcmp(const char *str1, const char *str2);
+extern void *myMemset(void *s, int ch, size_t n);
+extern char *myStrcpy(char* dest, const char *src);
+extern char *myStrcat(char *dest, const char *src);
 
 
 

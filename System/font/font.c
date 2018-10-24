@@ -1,4 +1,6 @@
 
+#include "stm32h7xx.h"
+
 #include "font.h"
 #include "ff.h"
 #include "SPIFlash_drv.h"
@@ -147,9 +149,9 @@ void font_update(TCHAR *drv)
 
     for(font = 0; font < FONT_UPDATE_INFO; font++)
     {
-        memset(FontSrc, 0, sizeof(FontSrc));
-        strcpy((char *)FontSrc, (char *)drv);
-        strcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+        myMemset(FontSrc, 0, sizeof(FontSrc));
+        myStrcpy((char *)FontSrc, (char *)drv);
+        myStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
 
         f_ret = f_open(&FontFIL, (const TCHAR*)FontSrc, FA_READ);
         if(f_ret != FR_OK)
@@ -170,9 +172,9 @@ void font_update(TCHAR *drv)
     //lcd debug out : update processing
     for(font = 0; font < FONT_UPDATE_NUM; font++)
     {
-        memset(FontSrc, 0, sizeof(FontSrc));
-        strcpy((char *)FontSrc, (char *)drv);
-        strcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+        myMemset(FontSrc, 0, sizeof(FontSrc));
+        myStrcpy((char *)FontSrc, (char *)drv);
+        myStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
 
         sf_ret = font_ProcUpdate(font, (TCHAR *)FontSrc);
         if(f_ret != 0)

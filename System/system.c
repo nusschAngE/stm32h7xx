@@ -2,7 +2,13 @@
 
 #include "stm32h7xx.h"
 #include "system.h"
+#include "public.h"
 
+#if (RTOS_uCOS_II == 1U)
+#include <ucos_ii.h>
+#endif
+
+volatile bool sysTickInitDone = FALSE;
 SystemClock_Struct SystemClock;
 
 /*
@@ -113,8 +119,10 @@ void system_RCCConfig(void)
     
     /**Configure the Systick interrupt time 
     */
+#if (RTOS_uCOS_II == 0U)
   	HAL_SYSTICK_Config(SystemCoreClock/1000);
-
+  	sysTickInitDone = TRUE;
+#endif
     /**Configure the Systick 
     */
   	HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
@@ -227,4 +235,22 @@ void system_MPUConfig(void)
 	
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT); 
 }
+
+#if (RTOS_uCOS_II == 1U)
+void system_SysTickInit(void)
+{
+    #if (OS_CRITICAL_METHOD == 3u)
+    OS_CPU_SR cpu_sr = (OS_CPU_SR)0;
+    #endif
+
+    SystemCoreClock = HAL_RCC_GetSysClockFreq();
+
+    OS_ENTER_CRITICAL();
+    OS_CPU_SysTickInit(SystemCoreClock/1000);
+    sysTickInitDone = TRUE;
+    OS_EXIT_CRITICAL();
+    //disable interrupt
+    OS_CPU_IntDisable();
+}
+#endif
 

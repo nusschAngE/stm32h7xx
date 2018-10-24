@@ -48,7 +48,7 @@ const HZKFont_Struct HZKFont[4] =
 */
 static uint16_t Field_FontGRAM_ASCII(LCD_COLOR *ram, uint16_t size, uint8_t ch, uint8_t font, LCD_COLOR fr, LCD_COLOR bg)
 {
-    uint8_t ofs = ch - ' ';
+    uint8_t ofs;
     uint16_t i,j,bmpSize =  0;
 
     uint8_t x = 0, y = 0, temp = 0;
@@ -68,6 +68,10 @@ static uint16_t Field_FontGRAM_ASCII(LCD_COLOR *ram, uint16_t size, uint8_t ch, 
     if((bitmapSize > size) || (bitmapSize == 0)) 
         return 0;//error size
 
+    ofs = ch - ' ';
+    if(ofs >= ASCII_NUMS)
+        ofs = 0;
+    
     /* field data */
     for(i = 0; i < bmpSize; i++)
     {

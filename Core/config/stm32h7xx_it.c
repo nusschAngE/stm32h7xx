@@ -41,6 +41,10 @@
 #include "stm32h7xx.h"
 #include "delay.h"
 
+#if (RTOS_uCOS_II == 1U)
+#include <ucos_ii.h>
+#endif
+
 /** @addtogroup STM32H7xx_HAL_Examples
   * @{
   */
@@ -145,9 +149,12 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
+#if (RTOS_uCOS_II == 0)
 void PendSV_Handler(void)
 {
+
 }
+#endif
 
 /**
   * @brief  This function handles SysTick Handler.
@@ -156,12 +163,26 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-    HAL_IncTick();
+#if (RTOS_uCOS_II == 1U)
 
+#if OS_CRITICAL_METHOD == 3u                                    /* Allocate storage for CPU status register             */
+    OS_CPU_SR  cpu_sr;
+#endif
+
+    OS_ENTER_CRITICAL();
+    OSIntEnter();                                               /* Tell uC/OS-II that we are starting an ISR            */
+    OS_EXIT_CRITICAL();
+
+    OSTimeTick();                                               /* Call uC/OS-II's OSTimeTick()                         */
+
+    OSIntExit();                                                /* Tell uC/OS-II that we are leaving the ISR            */
+
+#endif
+    HAL_IncTick();
     /* systick delay process */
-    if(delay_ticks)
+    if(delayTicksCnt)
     {
-        delay_ticks--;
+        delayTicksCnt--;
     }
 }
 

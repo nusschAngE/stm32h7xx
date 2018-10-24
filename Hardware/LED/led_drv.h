@@ -4,27 +4,14 @@
 
 #include "public.h"
 
-/* led device
-*/
-typedef struct
-{
-    GPIO_TypeDef* GPIOx;
-    uint16_t      Pinx;
-}_ledDev;
+#define LED_NONE    0
+#define LED_GREEN   1
+#define LED_RED     2
 
-
-/* led device struct init */
-#define LED_DEVICE_FIELD(gpiox, pinx) {gpiox, pinx}
-
-
-/* global */
-extern _ledDev ledRed;
-extern _ledDev ledGreen;
-
-/* global function */
+/****************** GLOBAL FUNCTION *****************/
 extern void led_Init(void);
-extern void led_SetOnOff(_ledDev *led, bool on);
-
+extern void led_Toggle(uint8_t led);
+extern void led_Onoff(uint8_t led, bool on);
 
 #endif
 

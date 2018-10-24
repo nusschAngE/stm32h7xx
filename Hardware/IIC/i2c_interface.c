@@ -28,11 +28,11 @@ static void gpio_iic_start(void)
     IIC_SDA_DRV_OUT();
     IIC_SCL_H();
     IIC_SDA_H();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_L();
-    delay_us(5);
+    uSleep(5);
     IIC_SDA_L();
-    delay_us(5);
+    uSleep(5);
 }
 
 static void gpio_iic_restart(void)
@@ -45,10 +45,10 @@ static void gpio_iic_stop(void)
     IIC_SDA_DRV_OUT();
     IIC_SCL_L();
     IIC_SDA_L();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_H();
     IIC_SDA_H();
-    delay_us(5);
+    uSleep(5);
 }
 
 static uint8_t gpio_iic_readACK(void)
@@ -57,10 +57,10 @@ static uint8_t gpio_iic_readACK(void)
     uint8_t ret = 0;
 
     IIC_SCL_H();
-    delay_us(4);
+    uSleep(4);
     IIC_SDA_H();
     IIC_SDA_DRV_IN();
-    delay_us(4);
+    uSleep(4);
 
     while(IIC_SDA_READ())
     {
@@ -81,27 +81,27 @@ static uint8_t gpio_iic_readACK(void)
 static void gpio_iic_sendACK(void)
 {
     IIC_SCL_L();
-    delay_us(5);
+    uSleep(5);
     IIC_SDA_L();
     IIC_SDA_DRV_OUT();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_H();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_L();
-    delay_us(3);
+    uSleep(3);
 }
 
 static void gpio_iic_sendNACK(void)
 {
     IIC_SCL_L();
-    delay_us(5);
+    uSleep(5);
     IIC_SDA_H();
     IIC_SDA_DRV_OUT();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_H();
-    delay_us(5);
+    uSleep(5);
     IIC_SCL_L();
-    delay_us(3);    
+    uSleep(3);    
 }
 
 static void gpio_iic_sendByte(uint8_t data)
@@ -109,7 +109,7 @@ static void gpio_iic_sendByte(uint8_t data)
     uint8_t i;
 
     IIC_SCL_L();
-    delay_us(3);
+    uSleep(3);
     IIC_SDA_DRV_OUT();
     for(i = 0; i < 8; i++)
     {
@@ -119,11 +119,11 @@ static void gpio_iic_sendByte(uint8_t data)
             IIC_SDA_L();
 
         data <<= 1;
-        delay_us(2);
+        uSleep(2);
         IIC_SCL_H();
-        delay_us(4);
+        uSleep(4);
         IIC_SCL_L();
-        delay_us(3);
+        uSleep(3);
     }
 }
 
@@ -132,20 +132,20 @@ static uint8_t gpio_iic_readByte(uint8_t ack)
     uint8_t i, temp = 0;
 
     IIC_SDA_DRV_IN();
-    delay_us(2);
+    uSleep(2);
     for(i = 0; i < 8; i++)
     {
         IIC_SCL_L();
-        delay_us(3);
+        uSleep(3);
         IIC_SCL_H();
-        delay_us(2);
+        uSleep(2);
         temp <<= 1;
         if(IIC_SDA_READ())
             temp |= 0x01;
         else
             temp |= 0x00;
 
-        delay_us(2);
+        uSleep(2);
     }
 
     if(ack)

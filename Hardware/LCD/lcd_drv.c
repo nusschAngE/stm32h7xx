@@ -3,5 +3,5 @@
 
 
 /* LCD device struct */
-LCDDev_Struct LCDDevice;
+_lcd_dev lcdDev;
 

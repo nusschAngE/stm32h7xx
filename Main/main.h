@@ -5,7 +5,7 @@
 #include "public.h"
 
 
-#define TEMPLATE_DEBUG  1U
+#define TEMPLATE_DEBUG  0U
 
 
 

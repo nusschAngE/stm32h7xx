@@ -21,10 +21,10 @@ typedef struct
     uint8_t  dir;
     uint16_t width;
     uint16_t height;
-}LCDDev_Struct;
+}_lcd_dev;
 
 /* LCD device struct */
-extern LCDDev_Struct LCDDevice;
+extern _lcd_dev lcdDev;
 
 void lcd_Init(void);
 void lcd_SetOnOff(uint8_t on);

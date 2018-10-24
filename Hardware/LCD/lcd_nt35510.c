@@ -243,7 +243,7 @@ static void SRAM_Init(void)
 void lcd_Init(void)
 {
     SRAM_Init();
-    delay_ms(50);
+    uSleep(50000);
 
  	nt35510_set_register(0xF000,0x55);
 	nt35510_set_register(0xF001,0xAA);
@@ -654,13 +654,13 @@ void lcd_Init(void)
 	//nt35510_set_register(0x3600,0x00);
 	nt35510_set_register(0x3A00,0x55);  //16-bit/pixel
 	nt35510_write_reg(0x1100); //sleep out
-    delay_ms(5);
+    uSleep(5000);
 	nt35510_write_reg(0x2800); //display off
 
-	LCDDevice.id = 35510;
-	LCDDevice.dir = 0;
-	LCDDevice.width = DEFAULT_LCD_WIDTH;
-	LCDDevice.height = DEFAULT_LCD_HEIGHT;
+	lcdDev.id = 35510;
+	lcdDev.dir = 0;
+	lcdDev.width = DEFAULT_LCD_WIDTH;
+	lcdDev.height = DEFAULT_LCD_HEIGHT;
 
     /* lcd device set on */
     lcd_SetScanDirection(DEFAULT_SCANDIR);
@@ -687,57 +687,57 @@ void lcd_SetScanDirection(uint8_t dir)
 	switch(dir)
 	{
 		case L2R_U2D:
-			LCDDevice.dir = L2R_U2D;
-	        LCDDevice.width = DEFAULT_LCD_WIDTH;
-	        LCDDevice.height = DEFAULT_LCD_HEIGHT;
+			lcdDev.dir = L2R_U2D;
+	        lcdDev.width = DEFAULT_LCD_WIDTH;
+	        lcdDev.height = DEFAULT_LCD_HEIGHT;
 	        regval |= (0<<7)|(0<<6)|(0<<5);
 			break;
 		case L2R_D2U:
-		    LCDDevice.dir = L2R_D2U;
-	        LCDDevice.width = DEFAULT_LCD_WIDTH;
-	        LCDDevice.height = DEFAULT_LCD_HEIGHT;
+		    lcdDev.dir = L2R_D2U;
+	        lcdDev.width = DEFAULT_LCD_WIDTH;
+	        lcdDev.height = DEFAULT_LCD_HEIGHT;
 			regval |= (1<<7)|(0<<6)|(0<<5); 
 			break;
 		case R2L_U2D:
-		    LCDDevice.dir = R2L_U2D;
-	        LCDDevice.width = DEFAULT_LCD_WIDTH;
-	        LCDDevice.height = DEFAULT_LCD_HEIGHT;
+		    lcdDev.dir = R2L_U2D;
+	        lcdDev.width = DEFAULT_LCD_WIDTH;
+	        lcdDev.height = DEFAULT_LCD_HEIGHT;
 			regval |= (0<<7)|(1<<6)|(0<<5); 
 			break;
 		case R2L_D2U:
-		    LCDDevice.dir = R2L_D2U;
-	        LCDDevice.width = DEFAULT_LCD_WIDTH;
-	        LCDDevice.height = DEFAULT_LCD_HEIGHT;
+		    lcdDev.dir = R2L_D2U;
+	        lcdDev.width = DEFAULT_LCD_WIDTH;
+	        lcdDev.height = DEFAULT_LCD_HEIGHT;
 			regval |= (1<<7)|(1<<6)|(0<<5); 
 			break;	 
 		case U2D_L2R:
-		    LCDDevice.dir = U2D_L2R;
-	        LCDDevice.width = DEFAULT_LCD_HEIGHT;
-	        LCDDevice.height = DEFAULT_LCD_WIDTH;
+		    lcdDev.dir = U2D_L2R;
+	        lcdDev.width = DEFAULT_LCD_HEIGHT;
+	        lcdDev.height = DEFAULT_LCD_WIDTH;
 			regval |= (0<<7)|(0<<6)|(1<<5); 
 			break;
 		case U2D_R2L:
-		    LCDDevice.dir = U2D_R2L;
-	        LCDDevice.width = DEFAULT_LCD_HEIGHT;
-	        LCDDevice.height = DEFAULT_LCD_WIDTH;
+		    lcdDev.dir = U2D_R2L;
+	        lcdDev.width = DEFAULT_LCD_HEIGHT;
+	        lcdDev.height = DEFAULT_LCD_WIDTH;
 			regval |= (0<<7)|(1<<6)|(1<<5); 
 			break;
 		case D2U_L2R:
-		    LCDDevice.dir = D2U_L2R;
-	        LCDDevice.width = DEFAULT_LCD_HEIGHT;
-	        LCDDevice.height = DEFAULT_LCD_WIDTH;
+		    lcdDev.dir = D2U_L2R;
+	        lcdDev.width = DEFAULT_LCD_HEIGHT;
+	        lcdDev.height = DEFAULT_LCD_WIDTH;
 			regval |= (1<<7)|(0<<6)|(1<<5); 
 			break;
 		case D2U_R2L:
-		    LCDDevice.dir = D2U_R2L;
-	        LCDDevice.width = DEFAULT_LCD_HEIGHT;
-	        LCDDevice.height = DEFAULT_LCD_WIDTH;
+		    lcdDev.dir = D2U_R2L;
+	        lcdDev.width = DEFAULT_LCD_HEIGHT;
+	        lcdDev.height = DEFAULT_LCD_WIDTH;
 			regval |= (1<<7)|(1<<6)|(1<<5); 
             break;
         default:
-	        LCDDevice.dir = L2R_U2D;
-	        LCDDevice.width = DEFAULT_LCD_WIDTH;
-	        LCDDevice.height = DEFAULT_LCD_HEIGHT;
+	        lcdDev.dir = L2R_U2D;
+	        lcdDev.width = DEFAULT_LCD_WIDTH;
+	        lcdDev.height = DEFAULT_LCD_HEIGHT;
 	        regval |= (0<<7)|(0<<6)|(0<<5);    
 			break;	 
 	}
@@ -749,7 +749,7 @@ void lcd_clear(LCD_COLOR color)
 {
     uint32_t wSize = DEFAULT_LCD_WIDTH * DEFAULT_LCD_HEIGHT;
 
-    nt35510_set_window(0, 0, LCDDevice.width, LCDDevice.height);
+    nt35510_set_window(0, 0, lcdDev.width, lcdDev.height);
     nt35510_flush_color(color, wSize);
 }
 
@@ -757,7 +757,7 @@ uint8_t lcd_ClearBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
 {
     uint32_t wSize = width * height;
 
-    if(x >= LCDDevice.width || y >= LCDDevice.height)
+    if(x >= lcdDev.width || y >= lcdDev.height)
         return LCD_BC;
 
     nt35510_set_window(x, y, width, height);
@@ -767,7 +767,7 @@ uint8_t lcd_ClearBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
     
 uint8_t lcd_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color)
 {
-    if(x >= LCDDevice.width || y >= LCDDevice.height)
+    if(x >= lcdDev.width || y >= lcdDev.height)
         return LCD_BC;
 
     /* draw one point ,set start position only */
@@ -782,7 +782,7 @@ uint8_t lcd_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
 {
     uint32_t wSize = width * height;
 
-    if(x >= LCDDevice.width || y >= LCDDevice.height)
+    if(x >= lcdDev.width || y >= lcdDev.height)
         return LCD_BC;
 
     /* write to lcd */    
@@ -795,7 +795,7 @@ uint8_t lcd_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR
 {
     uint32_t wSize = 0;
 
-    if(x >= LCDDevice.width || y >= LCDDevice.height)
+    if(x >= lcdDev.width || y >= lcdDev.height)
         return LCD_BC;
 
     /* field font to FontGRAM[]*/
@@ -821,7 +821,7 @@ uint16_t lcd_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_CO
     uint16_t x0 = x, y0 = y;
     uint16_t bWrite = 0;
 
-    if(x >= LCDDevice.width || y >= LCDDevice.height)
+    if(x >= lcdDev.width || y >= lcdDev.height)
         return 0;
 
     while(pStr[bWrite] != '\0')
@@ -832,7 +832,7 @@ uint16_t lcd_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_CO
         x += ASCFont[font].width;
         /* go to next char */
         bWrite++;
-        if(x >= LCDDevice.width)
+        if(x >= lcdDev.width)
         {
             break;
         }

@@ -1,11 +1,14 @@
 
 #include "stm32h7xx.h"
+#include "lcd_drv.h"
 #include "touch_drv.h"
 #include "delay.h"
 
+#include "led_drv.h"
+
 /****************************************/
 
-#define T_IIC_DELAY(x)      ShortDelay(x)
+#define T_IIC_DELAY(x)      uSleep(x)
 #define T_IIC_DELAY_TICK    (50)
 
 /***************** IIC function ********************/
@@ -188,13 +191,132 @@ void T_IIC_Stop(void)
 }
 
 
+/*************** GLOBAL FUNCTION ****************/
 
+/* TP DEVICE */
+_tp_dev tpDev;
+_tp_event tpEvent;
 
+/* device init */
+void touch_Init(void)
+{
+    if(lcdDev.id == 35510)
+    {
+        if(GT9147_Init() == TP_STA_OK)
+            tpDev.scanFunc = GT9147_Scan;
+        else
+            printf("touch[GT9147] init error!\r\n");
+    }
+}
 
+void touchScan_Task(void)
+{
+    static uint32_t cnt = 0;
 
+    uint8_t testKey = 0;
+    uint16_t NonActCount = 0;
 
+    printf("touchScan_Task start...\r\n");
+    while(1)
+    {
+        tpDev.scanFunc(0);
+        uSleep(2000);
 
+        if(tpDev.actPoint)
+        {
+            cnt++;
 
+            if((cnt >= 5) && (cnt < 40))
+            {
+                if(tpEvent.key[0] == TP_KEY_NONE)
+                {
+                    tpEvent.key[0] = TP_KEY_DOWN;
+                    tpEvent.xPos[0] = tpDev.xPos[0];
+                    tpEvent.yPos[0] = tpDev.yPos[0];
+                    testKey = TP_KEY_DOWN;//key down
+                    printf("touch key down\r\n");
+                }
+            }
+            else if(cnt > 450)
+            {
+                if(tpEvent.key[0] == TP_KEY_DOWN)
+                {
+                    tpEvent.key[0] = TP_KEY_HOLD;
+                    tpEvent.xPos[0] = tpDev.xPos[0];
+                    tpEvent.yPos[0] = tpDev.yPos[0];
+                    testKey = TP_KEY_HOLD;//key hold
+                    printf("touch key hold\r\n");
+                }
+            }
+        }
 
+        if(tpDev.actPoint == 0)
+        {
+            //process
+            if((cnt >= 40) && (cnt < 450))
+            {
+                if(tpEvent.key[0] == TP_KEY_DOWN)
+                {
+                    tpEvent.key[0] = TP_KEY_UP_BEFORE_HOLD;
+                    tpEvent.xPos[0] = tpDev.xPos[0];
+                    tpEvent.yPos[0] = tpDev.yPos[0];
+                    testKey = TP_KEY_UP_BEFORE_HOLD;//key down
+                    printf("touch key up before hold\r\n");
+                }
+            }
+            else if(cnt < 450)
+            {
+                if(tpEvent.key[0] == TP_KEY_HOLD)
+                {
+                    tpEvent.key[0] = TP_KEY_UP_AFTER_HOLD;
+                    tpEvent.xPos[0] = tpDev.xPos[0];
+                    tpEvent.yPos[0] = tpDev.yPos[0];
+                    testKey = TP_KEY_UP_AFTER_HOLD;//key down
+                    printf("touch key up after hold\r\n");
+                }
+            }
+            
+            cnt = 0;
+        }
+#if 1//test code
+        {
+            if(cnt == 0)
+            {
+                NonActCount++;
+                if(NonActCount >= 0x2FF)
+                {
+                    NonActCount = 0;
+                    tpEvent.key[0] = TP_KEY_NONE;
+                    led_Onoff(LED_RED, FALSE);
+                    led_Onoff(LED_GREEN, FALSE);
+                }
+            }
+            if(testKey)
+            {
+                switch (testKey)
+                {
+                    case TP_KEY_DOWN:
+                        led_Onoff(LED_RED, TRUE);
+                        led_Onoff(LED_GREEN, FALSE);
+                        break;
+                    case TP_KEY_UP_BEFORE_HOLD:
+                        led_Onoff(LED_RED, FALSE);
+                        led_Onoff(LED_GREEN, TRUE);
+                        break;
+                    case TP_KEY_HOLD:
+                        led_Onoff(LED_RED, TRUE);
+                        led_Onoff(LED_GREEN, TRUE);
+                        break;
+                    case TP_KEY_UP_AFTER_HOLD:
+                        led_Onoff(LED_RED, FALSE);
+                        led_Onoff(LED_GREEN, FALSE);
+                        break;
+                }
 
+                testKey = 0;
+            }
+        }
+#endif
+    }
+}
 

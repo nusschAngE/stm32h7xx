@@ -3,20 +3,29 @@
 *                                                uC/OS-II
 *                                          The Real-Time Kernel
 *
-*                              (c) Copyright 1992-2009, Micrium, Weston, FL
+*                           (c) Copyright 1992-2017; Micrium, Inc.; Weston; FL
 *                                           All Rights Reserved
 *
 * File    : uCOS_II.H
 * By      : Jean J. Labrosse
-* Version : V2.91
+* Version : V2.92.14
 *
 * LICENSING TERMS:
 * ---------------
 *   uC/OS-II is provided in source form for FREE evaluation, for educational use or for peaceful research.
-* If you plan on using  uC/OS-II  in a commercial product you need to contact Micriµm to properly license
+* If you plan on using  uC/OS-II  in a commercial product you need to contact Micrium to properly license
 * its use in your product. We provide ALL the source code for your convenience and to help you experience
 * uC/OS-II.   The fact that the  source is provided does  NOT  mean that you can use it without  paying a
 * licensing fee.
+*
+* Knowledge of the source code may NOT be used to develop a similar product.
+*
+* Please help us continue to provide the embedded community with the finest software available.
+* Your honesty is greatly appreciated.
+*
+* You can find our product's user manual, API reference, release notes and
+* more information at https://doc.micrium.com.
+* You can contact us at www.micrium.com.
 *********************************************************************************************************
 */
 
@@ -29,25 +38,26 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                                          uC/OS-II VERSION NUMBER
+*                                       uC/OS-II VERSION NUMBER
 *********************************************************************************************************
 */
 
-#define  OS_VERSION                 291u                /* Version of uC/OS-II (Vx.yy mult. by 100)    */
+#define  OS_VERSION                 29214u              /* Version of uC/OS-II (Vx.yy mult. by 10000)  */
 
 /*
 *********************************************************************************************************
-*                                           INCLUDE HEADER FILES
+*                                        INCLUDE HEADER FILES
 *********************************************************************************************************
 */
 
 #include <app_cfg.h>
 #include <os_cfg.h>
 #include <os_cpu.h>
+#include "os_trace.h"
 
 /*
 *********************************************************************************************************
-*                                             MISCELLANEOUS
+*                                            MISCELLANEOUS
 *********************************************************************************************************
 */
 
@@ -68,6 +78,7 @@ extern "C" {
 #define  OS_ASCII_NUL            (INT8U)0
 
 #define  OS_PRIO_SELF                0xFFu              /* Indicate SELF priority                      */
+#define  OS_PRIO_MUTEX_CEIL_DIS      0xFFu              /* Disable mutex priority ceiling promotion    */
 
 #if OS_TASK_STAT_EN > 0u
 #define  OS_N_SYS_TASKS                 2u              /* Number of system tasks                      */
@@ -94,10 +105,9 @@ extern "C" {
 
 #define  OS_TCB_RESERVED        ((OS_TCB *)1)
 
-/*$PAGE*/
 /*
 *********************************************************************************************************
-*                              TASK STATUS (Bit definition for OSTCBStat)
+*                             TASK STATUS (Bit definition for OSTCBStat)
 *********************************************************************************************************
 */
 #define  OS_STAT_RDY                 0x00u  /* Ready to run                                            */
@@ -113,7 +123,7 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                           TASK PEND STATUS (Status codes for OSTCBStatPend)
+*                          TASK PEND STATUS (Status codes for OSTCBStatPend)
 *********************************************************************************************************
 */
 #define  OS_STAT_PEND_OK                0u  /* Pending status OK, not pending, or pending complete     */
@@ -122,7 +132,7 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                                        OS_EVENT types
+*                                           OS_EVENT types
 *********************************************************************************************************
 */
 #define  OS_EVENT_TYPE_UNUSED           0u
@@ -137,7 +147,7 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                                         EVENT FLAGS
+*                                             EVENT FLAGS
 *********************************************************************************************************
 */
 #define  OS_FLAG_WAIT_CLR_ALL           0u  /* Wait for ALL    the bits specified to be CLR (i.e. 0)   */
@@ -161,21 +171,21 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                                   Values for OSTickStepState
+*                                     Values for OSTickStepState
 *
 * Note(s): This feature is used by uC/OS-View.
 *********************************************************************************************************
 */
 
 #if OS_TICK_STEP_EN > 0u
-#define  OS_TICK_STEP_DIS               0u  /* Stepping is disabled, tick runs as mormal               */
+#define  OS_TICK_STEP_DIS               0u  /* Stepping is disabled, tick runs as normal               */
 #define  OS_TICK_STEP_WAIT              1u  /* Waiting for uC/OS-View to set OSTickStepState to _ONCE  */
 #define  OS_TICK_STEP_ONCE              2u  /* Process tick once and wait for next cmd from uC/OS-View */
 #endif
 
 /*
 *********************************************************************************************************
-*       Possible values for 'opt' argument of OSSemDel(), OSMboxDel(), OSQDel() and OSMutexDel()
+*      Possible values for 'opt' argument of OSSemDel(), OSMboxDel(), OSQDel() and OSMutexDel()
 *********************************************************************************************************
 */
 #define  OS_DEL_NO_PEND                 0u
@@ -205,17 +215,18 @@ extern "C" {
 
 /*
 *********************************************************************************************************
-*                                 TASK OPTIONS (see OSTaskCreateExt())
+*                                TASK OPTIONS (see OSTaskCreateExt())
 *********************************************************************************************************
 */
 #define  OS_TASK_OPT_NONE          0x0000u  /* NO option selected                                      */
 #define  OS_TASK_OPT_STK_CHK       0x0001u  /* Enable stack checking for the task                      */
 #define  OS_TASK_OPT_STK_CLR       0x0002u  /* Clear the stack when the task is create                 */
 #define  OS_TASK_OPT_SAVE_FP       0x0004u  /* Save the contents of any floating-point registers       */
+#define  OS_TASK_OPT_NO_TLS        0x0008u  /* Specify that task doesn't needs TLS                     */
 
 /*
 *********************************************************************************************************
-*                            TIMER OPTIONS (see OSTmrStart() and OSTmrStop())
+*                          TIMER OPTIONS (see OSTmrStart() and OSTmrStop())
 *********************************************************************************************************
 */
 #define  OS_TMR_OPT_NONE                0u  /* No option selected                                      */
@@ -265,6 +276,7 @@ extern "C" {
 #define OS_ERR_ILLEGAL_CREATE_RUN_TIME 19u
 
 #define OS_ERR_MBOX_FULL               20u
+#define OS_ERR_ILLEGAL_DEL_RUN_TIME    21u
 
 #define OS_ERR_Q_FULL                  30u
 #define OS_ERR_Q_EMPTY                 31u
@@ -318,7 +330,7 @@ extern "C" {
 #define OS_ERR_FLAG_GRP_DEPLETED      114u
 #define OS_ERR_FLAG_NAME_TOO_LONG     115u
 
-#define OS_ERR_PIP_LOWER              120u
+#define OS_ERR_PCP_LOWER              120u
 
 #define OS_ERR_TMR_INVALID_DLY        130u
 #define OS_ERR_TMR_INVALID_PERIOD     131u
@@ -335,10 +347,32 @@ extern "C" {
 #define OS_ERR_TMR_STOPPED            142u
 #define OS_ERR_TMR_NO_CALLBACK        143u
 
-/*$PAGE*/
+#define OS_ERR_NO_MORE_ID_AVAIL       150u
+
+#define OS_ERR_TLS_NO_MORE_AVAIL      160u
+#define OS_ERR_TLS_ID_INVALID         161u
+#define OS_ERR_TLS_NOT_EN             162u
+#define OS_ERR_TLS_DESTRUCT_ASSIGNED  163u
+#define OS_ERR_OS_NOT_RUNNING         164u
+
+
 /*
 *********************************************************************************************************
-*                                          EVENT CONTROL BLOCK
+*                                       THREAD LOCAL STORAGE (TLS)
+*********************************************************************************************************
+*/
+
+#if OS_TASK_CREATE_EXT_EN > 0u
+#if defined(OS_TLS_TBL_SIZE) && (OS_TLS_TBL_SIZE > 0u)
+typedef  void                       *OS_TLS;
+
+typedef  INT8U                       OS_TLS_ID;
+#endif
+#endif
+
+/*
+*********************************************************************************************************
+*                                         EVENT CONTROL BLOCK
 *********************************************************************************************************
 */
 
@@ -350,11 +384,11 @@ typedef  INT16U   OS_PRIO;
 
 #if (OS_EVENT_EN) && (OS_MAX_EVENTS > 0u)
 typedef struct os_event {
-    INT8U    OSEventType;                    /* Type of event control block (see OS_EVENT_TYPE_xxxx)    */
-    void    *OSEventPtr;                     /* Pointer to message or queue structure                   */
-    INT16U   OSEventCnt;                     /* Semaphore Count (not used if other EVENT type)          */
-    OS_PRIO  OSEventGrp;                     /* Group corresponding to tasks waiting for event to occur */
-    OS_PRIO  OSEventTbl[OS_EVENT_TBL_SIZE];  /* List of tasks waiting for event to occur                */
+    INT8U    OSEventType;                   /* Type of event control block (see OS_EVENT_TYPE_xxxx)    */
+    void    *OSEventPtr;                    /* Pointer to message or queue structure                   */
+    INT16U   OSEventCnt;                    /* Semaphore Count (not used if other EVENT type)          */
+    OS_PRIO  OSEventGrp;                    /* Group corresponding to tasks waiting for event to occur */
+    OS_PRIO  OSEventTbl[OS_EVENT_TBL_SIZE]; /* List of tasks waiting for event to occur                */
 
 #if OS_EVENT_NAME_EN > 0u
     INT8U   *OSEventName;
@@ -365,7 +399,7 @@ typedef struct os_event {
 
 /*
 *********************************************************************************************************
-*                                       EVENT FLAGS CONTROL BLOCK
+*                                      EVENT FLAGS CONTROL BLOCK
 *********************************************************************************************************
 */
 
@@ -409,54 +443,54 @@ typedef struct os_flag_node {               /* Event Flag Wait List Node        
 } OS_FLAG_NODE;
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                          MESSAGE MAILBOX DATA
+*                                        MESSAGE MAILBOX DATA
 *********************************************************************************************************
 */
 
 #if OS_MBOX_EN > 0u
 typedef struct os_mbox_data {
-    void   *OSMsg;                         /* Pointer to message in mailbox                            */
-    OS_PRIO OSEventTbl[OS_EVENT_TBL_SIZE]; /* List of tasks waiting for event to occur                 */
-    OS_PRIO OSEventGrp;                    /* Group corresponding to tasks waiting for event to occur  */
+    void   *OSMsg;                          /* Pointer to message in mailbox                           */
+    OS_PRIO OSEventTbl[OS_EVENT_TBL_SIZE];  /* List of tasks waiting for event to occur                */
+    OS_PRIO OSEventGrp;                     /* Group corresponding to tasks waiting for event to occur */
 } OS_MBOX_DATA;
 #endif
 
 /*
 *********************************************************************************************************
-*                                     MEMORY PARTITION DATA STRUCTURES
+*                                  MEMORY PARTITION DATA STRUCTURES
 *********************************************************************************************************
 */
 
 #if (OS_MEM_EN > 0u) && (OS_MAX_MEM_PART > 0u)
-typedef struct os_mem {                   /* MEMORY CONTROL BLOCK                                      */
-    void   *OSMemAddr;                    /* Pointer to beginning of memory partition                  */
-    void   *OSMemFreeList;                /* Pointer to list of free memory blocks                     */
-    INT32U  OSMemBlkSize;                 /* Size (in bytes) of each block of memory                   */
-    INT32U  OSMemNBlks;                   /* Total number of blocks in this partition                  */
-    INT32U  OSMemNFree;                   /* Number of memory blocks remaining in this partition       */
+typedef struct os_mem {                     /* MEMORY CONTROL BLOCK                                    */
+    void   *OSMemAddr;                      /* Pointer to beginning of memory partition                */
+    void   *OSMemFreeList;                  /* Pointer to list of free memory blocks                   */
+    INT32U  OSMemBlkSize;                   /* Size (in bytes) of each block of memory                 */
+    INT32U  OSMemNBlks;                     /* Total number of blocks in this partition                */
+    INT32U  OSMemNFree;                     /* Number of memory blocks remaining in this partition     */
 #if OS_MEM_NAME_EN > 0u
-    INT8U  *OSMemName;                    /* Memory partition name                                     */
+    INT8U  *OSMemName;                      /* Memory partition name                                   */
 #endif
 } OS_MEM;
 
 
 typedef struct os_mem_data {
-    void   *OSAddr;                    /* Pointer to the beginning address of the memory partition     */
-    void   *OSFreeList;                /* Pointer to the beginning of the free list of memory blocks   */
-    INT32U  OSBlkSize;                 /* Size (in bytes) of each memory block                         */
-    INT32U  OSNBlks;                   /* Total number of blocks in the partition                      */
-    INT32U  OSNFree;                   /* Number of memory blocks free                                 */
-    INT32U  OSNUsed;                   /* Number of memory blocks used                                 */
+    void   *OSAddr;                         /* Ptr to the beginning address of the memory partition    */
+    void   *OSFreeList;                     /* Ptr to the beginning of the free list of memory blocks  */
+    INT32U  OSBlkSize;                      /* Size (in bytes) of each memory block                    */
+    INT32U  OSNBlks;                        /* Total number of blocks in the partition                 */
+    INT32U  OSNFree;                        /* Number of memory blocks free                            */
+    INT32U  OSNUsed;                        /* Number of memory blocks used                            */
 } OS_MEM_DATA;
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                    MUTUAL EXCLUSION SEMAPHORE DATA
+*                                   MUTUAL EXCLUSION SEMAPHORE DATA
 *********************************************************************************************************
 */
 
@@ -466,34 +500,34 @@ typedef struct os_mutex_data {
     OS_PRIO OSEventGrp;                     /* Group corresponding to tasks waiting for event to occur */
     BOOLEAN OSValue;                        /* Mutex value (OS_FALSE = used, OS_TRUE = available)      */
     INT8U   OSOwnerPrio;                    /* Mutex owner's task priority or 0xFF if no owner         */
-    INT8U   OSMutexPIP;                     /* Priority Inheritance Priority or 0xFF if no owner       */
+    INT8U   OSMutexPCP;                     /* Priority Ceiling Priority or 0xFF if PCP disabled       */
 } OS_MUTEX_DATA;
 #endif
 
 /*
 *********************************************************************************************************
-*                                          MESSAGE QUEUE DATA
+*                                         MESSAGE QUEUE DATA
 *********************************************************************************************************
 */
 
 #if OS_Q_EN > 0u
-typedef struct os_q {                   /* QUEUE CONTROL BLOCK                                         */
-    struct os_q   *OSQPtr;              /* Link to next queue control block in list of free blocks     */
-    void         **OSQStart;            /* Pointer to start of queue data                              */
-    void         **OSQEnd;              /* Pointer to end   of queue data                              */
-    void         **OSQIn;               /* Pointer to where next message will be inserted  in   the Q  */
-    void         **OSQOut;              /* Pointer to where next message will be extracted from the Q  */
-    INT16U         OSQSize;             /* Size of queue (maximum number of entries)                   */
-    INT16U         OSQEntries;          /* Current number of entries in the queue                      */
+typedef struct os_q {                       /* QUEUE CONTROL BLOCK                                     */
+    struct os_q   *OSQPtr;                  /* Link to next queue control block in list of free blocks */
+    void         **OSQStart;                /* Ptr to start of queue data                              */
+    void         **OSQEnd;                  /* Ptr to end   of queue data                              */
+    void         **OSQIn;                   /* Ptr to where next message will be inserted  in   the Q  */
+    void         **OSQOut;                  /* Ptr to where next message will be extracted from the Q  */
+    INT16U         OSQSize;                 /* Size of queue (maximum number of entries)               */
+    INT16U         OSQEntries;              /* Current number of entries in the queue                  */
 } OS_Q;
 
 
 typedef struct os_q_data {
-    void          *OSMsg;               /* Pointer to next message to be extracted from queue          */
-    INT16U         OSNMsgs;             /* Number of messages in message queue                         */
-    INT16U         OSQSize;             /* Size of message queue                                       */
+    void          *OSMsg;                   /* Pointer to next message to be extracted from queue      */
+    INT16U         OSNMsgs;                 /* Number of messages in message queue                     */
+    INT16U         OSQSize;                 /* Size of message queue                                   */
     OS_PRIO        OSEventTbl[OS_EVENT_TBL_SIZE];  /* List of tasks waiting for event to occur         */
-    OS_PRIO        OSEventGrp;          /* Group corresponding to tasks waiting for event to occur     */
+    OS_PRIO        OSEventGrp;              /* Group corresponding to tasks waiting for event to occur */
 } OS_Q_DATA;
 #endif
 
@@ -513,21 +547,21 @@ typedef struct os_sem_data {
 
 /*
 *********************************************************************************************************
-*                                            TASK STACK DATA
+*                                           TASK STACK DATA
 *********************************************************************************************************
 */
 
 #if OS_TASK_CREATE_EXT_EN > 0u
 typedef struct os_stk_data {
-    INT32U  OSFree;                    /* Number of free bytes on the stack                            */
-    INT32U  OSUsed;                    /* Number of bytes used on the stack                            */
+    INT32U  OSFree;                         /* Number of free entries on the stack                     */
+    INT32U  OSUsed;                         /* Number of entries used on the stack                     */
 } OS_STK_DATA;
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                          TASK CONTROL BLOCK
+*                                         TASK CONTROL BLOCK
 *********************************************************************************************************
 */
 
@@ -544,6 +578,12 @@ typedef struct os_tcb {
 
     struct os_tcb   *OSTCBNext;             /* Pointer to next     TCB in the TCB list                 */
     struct os_tcb   *OSTCBPrev;             /* Pointer to previous TCB in the TCB list                 */
+
+#if OS_TASK_CREATE_EXT_EN > 0u
+#if defined(OS_TLS_TBL_SIZE) && (OS_TLS_TBL_SIZE > 0u)
+    OS_TLS           OSTCBTLSTbl[OS_TLS_TBL_SIZE];
+#endif
+#endif
 
 #if (OS_EVENT_EN)
     OS_EVENT        *OSTCBEventPtr;         /* Pointer to          event control block                 */
@@ -595,11 +635,11 @@ typedef struct os_tcb {
 #endif
 } OS_TCB;
 
-/*$PAGE*/
+
 /*
-************************************************************************************************************************
-*                                                   TIMER DATA TYPES
-************************************************************************************************************************
+*********************************************************************************************************
+*                                          TIMER DATA TYPES
+*********************************************************************************************************
 */
 
 #if OS_TMR_EN > 0u
@@ -608,36 +648,50 @@ typedef  void (*OS_TMR_CALLBACK)(void *ptmr, void *parg);
 
 
 typedef  struct  os_tmr {
-    INT8U            OSTmrType;                       /* Should be set to OS_TMR_TYPE                                  */
-    OS_TMR_CALLBACK  OSTmrCallback;                   /* Function to call when timer expires                           */
-    void            *OSTmrCallbackArg;                /* Argument to pass to function when timer expires               */
-    void            *OSTmrNext;                       /* Double link list pointers                                     */
+    INT8U            OSTmrType;             /* Should be set to OS_TMR_TYPE                            */
+    OS_TMR_CALLBACK  OSTmrCallback;         /* Function to call when timer expires                     */
+    void            *OSTmrCallbackArg;      /* Argument to pass to function when timer expires         */
+    void            *OSTmrNext;             /* Double link list pointers                               */
     void            *OSTmrPrev;
-    INT32U           OSTmrMatch;                      /* Timer expires when OSTmrTime == OSTmrMatch                    */
-    INT32U           OSTmrDly;                        /* Delay time before periodic update starts                      */
-    INT32U           OSTmrPeriod;                     /* Period to repeat timer                                        */
+    INT32U           OSTmrMatch;            /* Timer expires when OSTmrTime == OSTmrMatch              */
+    INT32U           OSTmrDly;              /* Delay time before periodic update starts                */
+    INT32U           OSTmrPeriod;           /* Period to repeat timer                                  */
 #if OS_TMR_CFG_NAME_EN > 0u
-    INT8U           *OSTmrName;                       /* Name to give the timer                                        */
+    INT8U           *OSTmrName;             /* Name to give the timer                                  */
 #endif
-    INT8U            OSTmrOpt;                        /* Options (see OS_TMR_OPT_xxx)                                  */
-    INT8U            OSTmrState;                      /* Indicates the state of the timer:                             */
-                                                      /*     OS_TMR_STATE_UNUSED                                       */
-                                                      /*     OS_TMR_STATE_RUNNING                                      */
-                                                      /*     OS_TMR_STATE_STOPPED                                      */
+    INT8U            OSTmrOpt;              /* Options (see OS_TMR_OPT_xxx)                            */
+    INT8U            OSTmrState;            /* Indicates the state of the timer:                       */
+                                            /*     OS_TMR_STATE_UNUSED                                 */
+                                            /*     OS_TMR_STATE_RUNNING                                */
+                                            /*     OS_TMR_STATE_STOPPED                                */
 } OS_TMR;
 
 
 
 typedef  struct  os_tmr_wheel {
-    OS_TMR          *OSTmrFirst;                      /* Pointer to first timer in linked list                         */
+    OS_TMR          *OSTmrFirst;            /* Pointer to first timer in linked list                   */
     INT16U           OSTmrEntries;
 } OS_TMR_WHEEL;
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                            GLOBAL VARIABLES
+*                                       THREAD LOCAL STORAGE (TLS)
+*********************************************************************************************************
+*/
+
+#if OS_TASK_CREATE_EXT_EN > 0u
+#if defined(OS_TLS_TBL_SIZE) && (OS_TLS_TBL_SIZE > 0u)
+typedef  void                      (*OS_TLS_DESTRUCT_PTR)(OS_TCB    *ptcb,
+                                                          OS_TLS_ID  id,
+                                                          OS_TLS     value);
+#endif
+#endif
+
+/*
+*********************************************************************************************************
+*                                          GLOBAL VARIABLES
 *********************************************************************************************************
 */
 
@@ -705,6 +759,10 @@ OS_EXT  OS_Q             *OSQFreeList;              /* Pointer to list of free Q
 OS_EXT  OS_Q              OSQTbl[OS_MAX_QS];        /* Table of QUEUE control blocks                   */
 #endif
 
+#if OS_TASK_REG_TBL_SIZE > 0u
+OS_EXT  INT8U             OSTaskRegNextAvailID;     /* Next available Task register ID                 */
+#endif
+
 #if OS_TIME_GET_SET_EN > 0u
 OS_EXT  volatile  INT32U  OSTime;                   /* Current value of system time (in ticks)         */
 #endif
@@ -726,7 +784,7 @@ OS_EXT  OS_TMR_WHEEL      OSTmrWheelTbl[OS_TMR_CFG_WHEEL_SIZE];
 
 extern  INT8U   const     OSUnMapTbl[256];          /* Priority->Index    lookup table                 */
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                          FUNCTION PROTOTYPES
@@ -764,7 +822,43 @@ INT16U        OSEventPendMulti        (OS_EVENT       **pevents_pend,
 
 /*
 *********************************************************************************************************
-*                                         EVENT FLAGS MANAGEMENT
+*                                   TASK LOCAL STORAGE (TLS) SUPPORT
+*********************************************************************************************************
+*/
+
+#if OS_TASK_CREATE_EXT_EN > 0u
+#if defined(OS_TLS_TBL_SIZE) && (OS_TLS_TBL_SIZE > 0u)
+
+OS_TLS_ID     OS_TLS_GetID            (INT8U               *perr);
+
+OS_TLS        OS_TLS_GetValue         (OS_TCB              *ptcb,
+                                       OS_TLS_ID            id,
+                                       INT8U               *perr);
+
+void          OS_TLS_Init             (INT8U               *perr);
+
+void          OS_TLS_SetValue         (OS_TCB              *ptcb,
+                                       OS_TLS_ID            id,
+                                       OS_TLS               value,
+                                       INT8U               *perr);
+
+void          OS_TLS_SetDestruct      (OS_TLS_ID            id,
+                                       OS_TLS_DESTRUCT_PTR  pdestruct,
+                                       INT8U               *perr);
+
+void          OS_TLS_TaskCreate       (OS_TCB              *ptcb);
+
+void          OS_TLS_TaskDel          (OS_TCB              *ptcb);
+
+void          OS_TLS_TaskSw           (void);
+
+#endif
+#endif
+
+
+/*
+*********************************************************************************************************
+*                                       EVENT FLAGS MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -816,7 +910,7 @@ OS_FLAGS      OSFlagQuery             (OS_FLAG_GRP     *pgrp,
 
 /*
 *********************************************************************************************************
-*                                        MESSAGE MAILBOX MANAGEMENT
+*                                     MESSAGE MAILBOX MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -863,7 +957,7 @@ INT8U         OSMboxQuery             (OS_EVENT        *pevent,
 
 /*
 *********************************************************************************************************
-*                                           MEMORY MANAGEMENT
+*                                          MEMORY MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -930,10 +1024,10 @@ INT8U         OSMutexQuery            (OS_EVENT        *pevent,
 
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                         MESSAGE QUEUE MANAGEMENT
+*                                      MESSAGE QUEUE MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -990,10 +1084,10 @@ INT8U         OSQQuery                (OS_EVENT        *pevent,
 
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                          SEMAPHORE MANAGEMENT
+*                                        SEMAPHORE MANAGEMENT
 *********************************************************************************************************
 */
 #if OS_SEM_EN > 0u
@@ -1035,10 +1129,10 @@ void          OSSemSet                (OS_EVENT        *pevent,
 
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                            TASK MANAGEMENT
+*                                           TASK MANAGEMENT
 *********************************************************************************************************
 */
 #if OS_TASK_CHANGE_PRIO_EN > 0u
@@ -1102,16 +1196,18 @@ INT32U        OSTaskRegGet            (INT8U            prio,
                                        INT8U            id,
                                        INT8U           *perr);
 
+INT8U         OSTaskRegGetID          (INT8U           *perr);
+
 void          OSTaskRegSet            (INT8U            prio,
                                        INT8U            id,
                                        INT32U           value,
                                        INT8U           *perr);
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
-*                                            TIME MANAGEMENT
+*                                           TIME MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1137,7 +1233,7 @@ void          OSTimeTick              (void);
 
 /*
 *********************************************************************************************************
-*                                            TIMER MANAGEMENT
+*                                          TIMER MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1177,7 +1273,7 @@ INT8U        OSTmrSignal              (void);
 
 /*
 *********************************************************************************************************
-*                                             MISCELLANEOUS
+*                                            MISCELLANEOUS
 *********************************************************************************************************
 */
 
@@ -1201,7 +1297,7 @@ void          OSStatInit              (void);
 
 INT16U        OSVersion               (void);
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                      INTERNAL FUNCTION PROTOTYPES
@@ -1290,7 +1386,7 @@ INT8U         OS_TCBInit              (INT8U            prio,
 void          OSTmr_Init              (void);
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                          FUNCTION PROTOTYPES
@@ -1328,7 +1424,7 @@ void          OSTCBInitHook           (OS_TCB          *ptcb);
 void          OSTimeTickHook          (void);
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                          FUNCTION PROTOTYPES
@@ -1370,7 +1466,7 @@ void          OSIntCtxSw              (void);
 void          OSCtxSw                 (void);
 #endif
 
-/*$PAGE*/
+
 /*
 *********************************************************************************************************
 *                                   LOOK FOR MISSING #define CONSTANTS
@@ -1385,7 +1481,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                            EVENT FLAGS
+*                                             EVENT FLAGS
 *********************************************************************************************************
 */
 
@@ -1427,7 +1523,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                           MESSAGE MAILBOXES
+*                                          MESSAGE MAILBOXES
 *********************************************************************************************************
 */
 
@@ -1461,7 +1557,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                           MEMORY MANAGEMENT
+*                                          MEMORY MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1487,7 +1583,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                       MUTUAL EXCLUSION SEMAPHORES
+*                                     MUTUAL EXCLUSION SEMAPHORES
 *********************************************************************************************************
 */
 
@@ -1509,7 +1605,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                              MESSAGE QUEUES
+*                                           MESSAGE QUEUES
 *********************************************************************************************************
 */
 
@@ -1559,7 +1655,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                              SEMAPHORES
+*                                             SEMAPHORES
 *********************************************************************************************************
 */
 
@@ -1589,7 +1685,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                             TASK MANAGEMENT
+*                                           TASK MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1636,6 +1732,10 @@ void          OSCtxSw                 (void);
 
 #ifndef OS_TASK_CREATE_EXT_EN
 #error  "OS_CFG.H, Missing OS_TASK_CREATE_EXT_EN: Include code for OSTaskCreateExt()"
+#else
+    #if (OS_TASK_CREATE_EXT_EN == 0u) && (OS_TASK_CREATE_EN == 0u)
+    #error  "OS_CFG.H,         OS_TASK_CREATE_EXT_EN or OS_TASK_CREATE_EN must be Enable (1)"
+    #endif
 #endif
 
 #ifndef OS_TASK_DEL_EN
@@ -1664,7 +1764,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                             TIME MANAGEMENT
+*                                           TIME MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1686,7 +1786,7 @@ void          OSCtxSw                 (void);
 
 /*
 *********************************************************************************************************
-*                                             TIMER MANAGEMENT
+*                                          TIMER MANAGEMENT
 *********************************************************************************************************
 */
 
@@ -1727,7 +1827,7 @@ void          OSCtxSw                 (void);
     #endif
 
     #ifndef OS_TMR_CFG_TICKS_PER_SEC
-    #error  "OS_CFG.H, Missing OS_TMR_CFG_TICKS_PER_SEC: Determines the rate at which tiem timer management task will run (Hz)"
+    #error  "OS_CFG.H, Missing OS_TMR_CFG_TICKS_PER_SEC: Determines the rate at which the timer management task will run (Hz)"
     #endif
 
     #ifndef OS_TASK_TMR_STK_SIZE
@@ -1829,8 +1929,10 @@ void          OSCtxSw                 (void);
 #error "OS_CFG.H, CANTATA must be disabled for safety-critical release code"
 #endif
 
-#ifdef OS_SCHED_LOCK_EN
-#error "OS_CFG.H, OS_SCHED_LOCK_EN must be disabled for safety-critical release code"
+#if OS_TMR_EN < 1u
+    #if OS_SCHED_LOCK_EN > 0u
+    #error "OS_CFG.H, OS_SCHED_LOCK_EN must be disabled for safety-critical release code if OS_TMR_EN is disabled"
+    #endif
 #endif
 
 #ifdef VSC_VALIDATION_MODE
@@ -1875,10 +1977,8 @@ void          OSCtxSw                 (void);
     #endif
 #endif
 
-#if    OS_TASK_EN > 0u
-    #if    OS_TASK_DEL_EN > 0u
-    #error "OS_CFG.H, OS_TASK_DEL_EN must be disabled for safety-critical release code"
-    #endif
+#if    OS_TASK_DEL_EN > 0u
+#error "OS_CFG.H, OS_TASK_DEL_EN must be disabled for safety-critical release code"
 #endif
 
 #if    OS_CRITICAL_METHOD != 3u
@@ -1892,4 +1992,3 @@ void          OSCtxSw                 (void);
 #endif
 
 #endif
-	 	   	  		 			 	    		   		 		 	 	 			 	    		   	 			 	  	 		 				 		  			 		 					 	  	  		      		  	   		      		  	 		 	      		   		 		  	 		 	      		  		  		  
