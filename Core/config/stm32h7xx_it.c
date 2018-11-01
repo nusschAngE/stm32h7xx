@@ -40,6 +40,7 @@
 #include "stm32h7xx_it.h"
 #include "stm32h7xx.h"
 #include "delay.h"
+#include "timedate.h"
 
 #if (RTOS_uCOS_II)
 #include <ucos_ii.h>
@@ -183,6 +184,14 @@ void SysTick_Handler(void)
     if(delayTicksCnt)
     {
         delayTicksCnt--;
+    }
+
+    /* system time */
+    systemCount++;
+    if(systemCount == COUNTS_PER_SECOND)
+    {
+        systemCount = 0;
+        systemTime++;
     }
 }
 

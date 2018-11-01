@@ -6,14 +6,14 @@
 #include "ui_event.h"
 #include "ui_handler.h"
 
-#define TOUCH_PRESS_FIX         (5)
+#define TOUCH_PRESS_FIX         (3)
 
 #define TOUCH_SLIDE_LIMIT       (20)
 //#define TOUCH_SLIDE_UD_FIX      (40)
 //#define TOUCH_SLIDE_LR_FIX      (60)
 
 /* TP EVENT */
-static TpEvent tpEvt;
+static TpEvent tpEvt[2];//0 : press, 1 : gesture
 static uint16_t holdCnt;
 static bool prevTouch = FALSE;
 
@@ -36,8 +36,6 @@ void tp_Task(void *p_arg)
     signed short xShift = 0, yShift = 0;
     uint16_t xTmp = 0, yTmp = 0;
 
-    bool sendEvt = FALSE;
-
     while(1)
     {
         if(tpDev.scanFunc)
@@ -46,7 +44,6 @@ void tp_Task(void *p_arg)
             actPoint = tpDev.scanFunc(TP_SCAN_POLLING);
         }
         
-        sendEvt = FALSE;
         if(actPoint)
         {
             if(actPoint == 1)
@@ -60,8 +57,8 @@ void tp_Task(void *p_arg)
 
 				//printf("tp[%d], %d - %d\r\n", actPoint, tpDev.xPos[0], tpDev.yPos[0]);
 			
-                tpEvt.xPos = tpDev.xPos[0];
-                tpEvt.yPos = tpDev.yPos[0];
+                tpEvt[0].xPos = tpEvt[1].xPos = tpDev.xPos[0];
+                tpEvt[0].yPos = tpEvt[1].yPos = tpDev.yPos[0];
 
                 xShift = xTmp - tpEvt.xPos;
                 if(xShift < 0)  xShift = 0 - xShift;
@@ -79,31 +76,31 @@ void tp_Task(void *p_arg)
                 {
                     if((holdCnt >= TP_PRESS_DELAY) && (holdCnt < TP_PRESS2HOLD_DELAY))
                     {
-                        if(tpEvt.flag == TP_KEY_NONE)
+                        if(tpEvt[0].flag == TP_KEY_NONE)
                         {
-                            tpEvt.flag = TP_KEY_DOWN;
-                            tpEvt.point = 1;
-                            sendEvt = TRUE;
+                            tpEvt[0].flag = TP_KEY_DOWN;
+                            tpEvt[0].point = 1;
+                            tp_SendEvent(&tpEvt[0]);
                         }
                     }
 
                     if(holdCnt >= TP_PRESS2HOLD_DELAY)
                     {
-                        if(tpEvt.flag == TP_KEY_DOWN)
+                        if(tpEvt[0].flag == TP_KEY_DOWN)
                         {
-                            tpEvt.flag = TP_KEY_HOLD;
-                            tpEvt.point = 1;
-                            sendEvt = TRUE;
+                            tpEvt[0].flag = TP_KEY_HOLD;
+                            tpEvt[0].point = 1;
+                            tp_SendEvent(&tpEvt[0]);
                         }
                     }
 
                     if((holdCnt % TP_HOLD2REPEAT_DELAY) == 0)
                     {
-                        if((tpEvt.flag == TP_KEY_HOLD) || (tpEvt.flag == TP_KEY_REPEAT))
+                        if((tpEvt[0].flag == TP_KEY_HOLD) || (tpEvt[0].flag == TP_KEY_REPEAT))
                         {
-                            tpEvt.flag = TP_KEY_REPEAT;
-                            tpEvt.point = 1;
-                            sendEvt = TRUE;
+                            tpEvt[0].flag = TP_KEY_REPEAT;
+                            tpEvt[0].point = 1;
+                            tp_SendEvent(&tpEvt[0]);
                         }
                     }
                 }//press fix
@@ -117,67 +114,62 @@ void tp_Task(void *p_arg)
                 {
                     if((xShift < TOUCH_PRESS_FIX) && (yShift < TOUCH_PRESS_FIX))
                     {
-                        if(tpEvt.flag == TP_KEY_DOWN)
+                        if(tpEvt[0].flag == TP_KEY_DOWN)
                         {
-                            tpEvt.flag = TP_KEY_UP_BEFORE_HOLD;
-                            tpEvt.point = 1;
-                            sendEvt = TRUE;
+                            tpEvt[0].flag = TP_KEY_UP_BEFORE_HOLD;
+                            tpEvt[0].point = 1;
+                            tp_SendEvent(&tpEvt[0]);
                         }
 
-                        if((tpEvt.flag == TP_KEY_HOLD) || (tpEvt.flag == TP_KEY_REPEAT))
+                        if((tpEvt[0].flag == TP_KEY_HOLD) || (tpEvt[0].flag == TP_KEY_REPEAT))
                         {
-                            tpEvt.flag = TP_KEY_UP_AFTER_HOLD;
-                            tpEvt.point = 1;
-                            sendEvt = TRUE;
+                            tpEvt[0].flag = TP_KEY_UP_AFTER_HOLD;
+                            tpEvt[0].point = 1;
+                            tp_SendEvent(&tpEvt[0]);
                         }
                     }
                     else
                     {
-                        if((tpEvt.flag == TP_KEY_NONE) || (tpEvt.flag == TP_KEY_DOWN))
+                        //if((tpEvt[0].flag == TP_KEY_NONE) || (tpEvt[0].flag == TP_KEY_DOWN))
                         {
                             if((xShift > yShift) && (xShift >= TOUCH_SLIDE_LIMIT))//maybe slide left/right
                             {
                                 if(xTmp > tpDev.xPos[0])//left
                                 {
-                                    tpEvt.gesture = TP_GESTURE_SLIDE_LEFT;
-                                    tpEvt.point = 1;
-                                    sendEvt = TRUE;
+                                    tpEvt[1].gesture = TP_GESTURE_SLIDE_LEFT;
+                                    tpEvt[1].point = 1;
+                                    tp_SendEvent(&tpEvt[1]);
                                 }
                                 else if(xTmp < tpDev.xPos[0])//right
                                 {
-                                    tpEvt.gesture = TP_GESTURE_SLIDE_RIGHT;
-                                    tpEvt.point = 1;
-                                    sendEvt = TRUE;
+                                    tpEvt[1].gesture = TP_GESTURE_SLIDE_RIGHT;
+                                    tpEvt[1].point = 1;
+                                    tp_SendEvent(&tpEvt[1]);
                                 }
                             }
                             else if((xShift < yShift) && (yShift >= TOUCH_SLIDE_LIMIT))//maybe slide up/down
                             {
                                 if(yTmp > tpDev.yPos[0])//up
                                 {
-                                    tpEvt.gesture = TP_GESTURE_SLIDE_UP;
-                                    tpEvt.point = 1;
-                                    sendEvt = TRUE;
+                                    tpEvt[1].gesture = TP_GESTURE_SLIDE_UP;
+                                    tpEvt[1].point = 1;
+                                    tp_SendEvent(&tpEvt[1]);
                                 }
                                 else if(yTmp < tpDev.yPos[0])//down
                                 {
-                                    tpEvt.gesture = TP_GESTURE_SLIDE_DOWN;
-                                    tpEvt.point = 1;
-                                    sendEvt = TRUE;
+                                    tpEvt[1].gesture = TP_GESTURE_SLIDE_DOWN;
+                                    tpEvt[1].point = 1;
+                                    tp_SendEvent(&tpEvt[1]);
                                 }
                             }
 
-                            printf("tpEvt.gesture = %d\r\n", tpEvt.gesture);
+                            printf("tpEvt.gesture = %d\r\n", tpEvt[1].gesture);
                         }
                     }
                 }
                 /* current release */
 				prevTouch = FALSE;
             }			
-        }
-
-        if(sendEvt)
-        {
-            tp_SendEvent(&tpEvt);
         }
 
 		if(actPoint == 0)
