@@ -294,7 +294,7 @@ SysTick_Handler PROC
                 EXPORT  SysTick_Handler                   [WEAK]
                 B       .
                 ENDP                                     
-                                                          
+
 Default_Handler PROC                                      
 
                 EXPORT  WWDG_IRQHandler                   [WEAK]                                       

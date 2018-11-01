@@ -1,7 +1,9 @@
 
+#include "stm32h7xx.h"
+
 #include "font.h"
 #include "ff.h"
-#include "SPIFlash_drv.h"
+#include "qspi_flash.h"
 
 /*  Update Font 
 **/
@@ -26,7 +28,7 @@ static const char *FontUpdatePath[] =
 };
 
 /* font in flash */
-_FontInfo FontInfo;
+FontInfo_Typedef FontInfo;
 
 /*  update Font data, need file system.
 *   save this data to SPI Flash
@@ -109,7 +111,7 @@ static uint8_t font_ProcUpdate(uint8_t font, TCHAR *path)
             break;
 
         /* write data to flash */
-        sf_ret = SPIFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
+        sf_ret = spiFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
         if(sf_ret != SPIFLASH_OK)
             break;
 
@@ -147,9 +149,9 @@ void font_update(TCHAR *drv)
 
     for(font = 0; font < FONT_UPDATE_INFO; font++)
     {
-        memset(FontSrc, 0, sizeof(FontSrc));
-        strcpy((char *)FontSrc, (char *)drv);
-        strcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+        pkgMemset(FontSrc, 0, sizeof(FontSrc));
+        pkgStrcpy((char *)FontSrc, (char *)drv);
+        pkgStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
 
         f_ret = f_open(&FontFIL, (const TCHAR*)FontSrc, FA_READ);
         if(f_ret != FR_OK)
@@ -160,7 +162,7 @@ void font_update(TCHAR *drv)
     }
 
     //lcd debug out : flash erase
-    sf_ret = SPIFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
+    sf_ret = spiFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
     if(sf_ret != SPIFLASH_OK)
     {
         //lcd debug out : erase error
@@ -170,9 +172,9 @@ void font_update(TCHAR *drv)
     //lcd debug out : update processing
     for(font = 0; font < FONT_UPDATE_NUM; font++)
     {
-        memset(FontSrc, 0, sizeof(FontSrc));
-        strcpy((char *)FontSrc, (char *)drv);
-        strcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+        pkgMemset(FontSrc, 0, sizeof(FontSrc));
+        pkgStrcpy((char *)FontSrc, (char *)drv);
+        pkgStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
 
         sf_ret = font_ProcUpdate(font, (TCHAR *)FontSrc);
         if(f_ret != 0)

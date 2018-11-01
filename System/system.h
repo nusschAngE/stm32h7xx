@@ -12,7 +12,7 @@ typedef struct
     uint32_t PLL3CLK_Frequency;
 }SystemClock_Struct;
 
-
+extern volatile bool sysTickInitDone;
 extern SystemClock_Struct SystemClock;
 
 extern void system_RCCConfig(void);
@@ -21,7 +21,9 @@ extern void system_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, ui
 extern void system_SCBCacheConfig(void);
 extern void system_MPUConfig(void);
 
-
+#if (RTOS_uCOS_II)
+extern void system_SysTickInit(void);
+#endif
 
 
 

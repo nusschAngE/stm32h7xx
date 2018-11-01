@@ -46,11 +46,11 @@ typedef struct
     uint32_t hzk32;
     uint32_t hzk32Addr;
     uint32_t hzk32Size;
-}_FontInfo;
+}FontInfo_Typedef;
 
 
 /* font in flash */
-extern _FontInfo FontInfo;
+extern FontInfo_Typedef FontInfo;
 
 extern void font_update(TCHAR *drv);
 
