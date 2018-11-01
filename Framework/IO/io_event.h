@@ -3,6 +3,7 @@
 #define _IO_EVENT_H
 
 
+<<<<<<< HEAD
 typedef enum
 {
     IO_EVT_NONE = 0,
@@ -31,5 +32,9 @@ enum
 #define KEY_HOLD_DEFAULT_DELAY      (100)
 #define KEY_REPEAT_DEFAULT_DELAY    (20)
 
+=======
+
+
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 #endif
 

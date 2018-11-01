@@ -3,7 +3,11 @@
 
 #include "font.h"
 #include "ff.h"
+<<<<<<< HEAD
 #include "qspi_flash.h"
+=======
+#include "SPIFlash_drv.h"
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
 /*  Update Font 
 **/
@@ -28,7 +32,11 @@ static const char *FontUpdatePath[] =
 };
 
 /* font in flash */
+<<<<<<< HEAD
 FontInfo_Typedef FontInfo;
+=======
+_FontInfo FontInfo;
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
 /*  update Font data, need file system.
 *   save this data to SPI Flash
@@ -111,7 +119,11 @@ static uint8_t font_ProcUpdate(uint8_t font, TCHAR *path)
             break;
 
         /* write data to flash */
+<<<<<<< HEAD
         sf_ret = spiFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
+=======
+        sf_ret = SPIFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
         if(sf_ret != SPIFLASH_OK)
             break;
 
@@ -149,9 +161,15 @@ void font_update(TCHAR *drv)
 
     for(font = 0; font < FONT_UPDATE_INFO; font++)
     {
+<<<<<<< HEAD
         pkgMemset(FontSrc, 0, sizeof(FontSrc));
         pkgStrcpy((char *)FontSrc, (char *)drv);
         pkgStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+=======
+        myMemset(FontSrc, 0, sizeof(FontSrc));
+        myStrcpy((char *)FontSrc, (char *)drv);
+        myStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
         f_ret = f_open(&FontFIL, (const TCHAR*)FontSrc, FA_READ);
         if(f_ret != FR_OK)
@@ -162,7 +180,11 @@ void font_update(TCHAR *drv)
     }
 
     //lcd debug out : flash erase
+<<<<<<< HEAD
     sf_ret = spiFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
+=======
+    sf_ret = SPIFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
     if(sf_ret != SPIFLASH_OK)
     {
         //lcd debug out : erase error
@@ -172,9 +194,15 @@ void font_update(TCHAR *drv)
     //lcd debug out : update processing
     for(font = 0; font < FONT_UPDATE_NUM; font++)
     {
+<<<<<<< HEAD
         pkgMemset(FontSrc, 0, sizeof(FontSrc));
         pkgStrcpy((char *)FontSrc, (char *)drv);
         pkgStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+=======
+        myMemset(FontSrc, 0, sizeof(FontSrc));
+        myStrcpy((char *)FontSrc, (char *)drv);
+        myStrcat((char *)FontSrc, (char *)FontUpdatePath[font]);
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
         sf_ret = font_ProcUpdate(font, (TCHAR *)FontSrc);
         if(f_ret != 0)

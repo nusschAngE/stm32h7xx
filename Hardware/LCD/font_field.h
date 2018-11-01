@@ -4,7 +4,11 @@
 
 #include "font.h"
 #include "ascii.h"
+<<<<<<< HEAD
 #include "qspi_flash.h"
+=======
+#include "SPIFlash_drv.h"
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
 /*  ASCII Font
 **/
@@ -21,7 +25,11 @@ const ASCFont_Struct ASCFont[4] =
     {FONT_ASC1206,  12,  6, 12},
     {FONT_ASC1608,  16,  8, 16},
     {FONT_ASC2412,  36, 12, 24},
+<<<<<<< HEAD
     {FONT_ASC3216,  64, 16, 32}
+=======
+    {FONT_ASC3216, 128, 32, 32}
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 };
 
 /*  HZK Font
@@ -151,6 +159,7 @@ static uint16_t Field_FontGRAM_HZK(LCD_COLOR *ram, uint16_t size, uint16_t gbk, 
     switch (font)
     {
         case FONT_HZK12:
+<<<<<<< HEAD
             spiFlash_Read(FontData, ofs + FontInfo.hzk12Addr, bmpSize);
             break;
         case FONT_HZK16:
@@ -161,6 +170,18 @@ static uint16_t Field_FontGRAM_HZK(LCD_COLOR *ram, uint16_t size, uint16_t gbk, 
             break;
         case FONT_HZK32:
             spiFlash_Read(FontData, ofs + FontInfo.hzk32Addr, bmpSize);
+=======
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk12Addr, bmpSize);
+            break;
+        case FONT_HZK16:
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk16Addr, bmpSize);
+            break;
+        case FONT_HZK24:
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk24Addr, bmpSize);
+            break;
+        case FONT_HZK32:
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk32Addr, bmpSize);
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
             break;
         default : return 0;
     }

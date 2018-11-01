@@ -21,7 +21,11 @@ extern void system_PLL3Config(uint32_t m, uint32_t n, uint32_t p, uint32_t q, ui
 extern void system_SCBCacheConfig(void);
 extern void system_MPUConfig(void);
 
+<<<<<<< HEAD
 #if (RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 1U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 extern void system_SysTickInit(void);
 #endif
 

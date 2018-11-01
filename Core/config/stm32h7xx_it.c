@@ -41,7 +41,11 @@
 #include "stm32h7xx.h"
 #include "delay.h"
 
+<<<<<<< HEAD
 #if (RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 1U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 #include <ucos_ii.h>
 #endif
 
@@ -149,7 +153,11 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
+<<<<<<< HEAD
 #if (!RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 0)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 void PendSV_Handler(void)
 {
 
@@ -163,7 +171,11 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
+<<<<<<< HEAD
 #if (RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 1U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 
 #if OS_CRITICAL_METHOD == 3u                                    /* Allocate storage for CPU status register             */
     OS_CPU_SR  cpu_sr;

@@ -4,7 +4,11 @@
 #include "system.h"
 #include "public.h"
 
+<<<<<<< HEAD
 #if (RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 1U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 #include <ucos_ii.h>
 #endif
 
@@ -119,7 +123,11 @@ void system_RCCConfig(void)
     
     /**Configure the Systick interrupt time 
     */
+<<<<<<< HEAD
 #if (!RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 0U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
   	HAL_SYSTICK_Config(SystemCoreClock/1000);
   	sysTickInitDone = TRUE;
 #endif
@@ -203,7 +211,11 @@ void system_MPUConfig(void)
 
 	HAL_MPU_Disable();					
 
+<<<<<<< HEAD
 #if 1
+=======
+#if 0
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 	/* SDRAM : FMC SDRAM Bank1 */
 	MPU_Initure.Enable = MPU_REGION_ENABLE;	
 	MPU_Initure.Number = MPU_REGION_NUMBER0;	
@@ -236,6 +248,7 @@ void system_MPUConfig(void)
 	HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT); 
 }
 
+<<<<<<< HEAD
 void HAL_MspInit(void)
 {
     system_RCCConfig();
@@ -244,6 +257,9 @@ void HAL_MspInit(void)
 }
 
 #if (RTOS_uCOS_II)
+=======
+#if (RTOS_uCOS_II == 1U)
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 void system_SysTickInit(void)
 {
     #if (OS_CRITICAL_METHOD == 3u)
@@ -259,6 +275,9 @@ void system_SysTickInit(void)
     //disable interrupt
     OS_CPU_IntDisable();
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> e96eff9db448919ea7b4b15e25bb05bf6f4dfc56
 #endif
 
