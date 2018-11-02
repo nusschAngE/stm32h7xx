@@ -44,7 +44,7 @@ void iokpd_Task(void *p_arg)
  
     while(1)
     {
-        keyScan = ioKey_GetKey();
+        keyScan = IOKey_GetKey();
 
         for(kpd = 0; kpd < GPIO_KEY_NUM; kpd++)
         {

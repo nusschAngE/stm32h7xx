@@ -35,8 +35,8 @@ DSTATUS disk_status (
 
 
 	case DEV_SDMMC :
-		result = sdcard_GetState();
-        if(result == SD_STATE_ERROR)
+		result = SD_GetCardState();
+        if(result == SD_ERROR)
         {
             stat |= STA_NODISK;
         }
@@ -66,8 +66,8 @@ DSTATUS disk_initialize (
 	switch (pdrv) {
 
 	case DEV_SDMMC :
-		result = sdcard_Init();
-		if(result != SD_RET_OK)
+		result = SD_Init();
+		if(result == 0)
         {
             stat |= STA_NOINIT;
         }
@@ -100,8 +100,8 @@ DRESULT disk_read (
 	switch (pdrv) {
 
 	case DEV_SDMMC :
-		result = sdcard_ReadMultipleBlocks(buff, (uint32_t)sector, count);
-		if(result == SD_RET_OK)
+		result = SD_ReadMultipleBlocks(buff, (uint32_t)sector, count);
+		if(result == 1)
 		{
 		    res = RES_OK;
         }
@@ -135,8 +135,8 @@ DRESULT disk_write (
 	switch (pdrv) {
 
 	case DEV_SDMMC :
-		result = sdcard_WriteMultipleBlocks((BYTE *)buff, (uint32_t)sector, count);
-		if(result == SD_RET_OK)
+		result = SD_WriteMultipleBlocks((BYTE *)buff, (uint32_t)sector, count);
+		if(result == 1)
 		{
 		    res = RES_OK;
 		}

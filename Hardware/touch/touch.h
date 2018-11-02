@@ -45,13 +45,13 @@ typedef struct
     
     uint8_t key;
     uint8_t gesture;
-
-    uint8_t (*scanFunc)(uint8_t);
+    
+    uint8_t (*scanFunc)(uint8_t mode);
 }TP_Device;
 
 /* TP DEVICE */
 extern TP_Device tpDev;
 
-extern void touch_Init(void);
+extern void TOUCH_Init(void);
 #endif
 

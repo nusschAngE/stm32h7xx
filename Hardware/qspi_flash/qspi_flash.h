@@ -41,15 +41,15 @@ enum
 /**************************** PUBLIC FUNCTION *******************************/
 
 /* public function */
-void spiFlash_Init(void);
-uint8_t spiFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr);
-uint8_t spiFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize);
+void SPIFlash_Init(void);
+uint8_t SPIFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr);
+uint8_t SPIFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize);
 /* SPI Flash write, not check */
-uint8_t spiFlash_WriteNoChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize);
+uint8_t SPIFlash_WriteNoChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize);
 /* SPI Flash write with check*/
-uint8_t spiFlash_WriteWithChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize);
+uint8_t SPIFlash_WriteWithChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize);
 
-void spiFlash_RWTest(void);
+void SPIFlash_RWTest(void);
 
 
 #endif

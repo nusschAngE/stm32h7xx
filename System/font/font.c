@@ -111,7 +111,7 @@ static uint8_t font_ProcUpdate(uint8_t font, TCHAR *path)
             break;
 
         /* write data to flash */
-        sf_ret = spiFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
+        sf_ret = SPIFlash_WriteNoChk(tempBuf, beginAddr + ofs, br);
         if(sf_ret != SPIFLASH_OK)
             break;
 
@@ -162,7 +162,7 @@ void font_update(TCHAR *drv)
     }
 
     //lcd debug out : flash erase
-    sf_ret = spiFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
+    sf_ret = SPIFlash_EraseSectors(FONT_STARTSECTOR, FONT_PRESECTOR);
     if(sf_ret != SPIFLASH_OK)
     {
         //lcd debug out : erase error

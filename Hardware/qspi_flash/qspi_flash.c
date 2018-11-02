@@ -171,7 +171,7 @@ void HAL_QSPI_MspInit(QSPI_HandleTypeDef *hqspi)
 }
 
 /* w25qxxx init */
-void spiFlash_Init(void)
+void SPIFlash_Init(void)
 {
 	uint8_t ret = 0;
 	uint8_t TempSR = 0;
@@ -202,7 +202,7 @@ void spiFlash_Init(void)
     W25Qxx_SetReadParameter(3, 0);
 }
 
-uint8_t spiFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr)
+uint8_t SPIFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr)
 {
     uint8_t ret;
     uint32_t currSector = StartSector;
@@ -225,7 +225,7 @@ uint8_t spiFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr)
 }
 
 /* SPI flash read */
-uint8_t spiFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize)
+uint8_t SPIFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize)
 {
     uint8_t ret = 0;
 
@@ -239,7 +239,7 @@ uint8_t spiFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize)
 /*  SPI Flash write, not check 
 *   page auto shift
 */
-uint8_t spiFlash_WriteNoChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
+uint8_t SPIFlash_WriteNoChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
 {
     uint8_t ret;
     uint16_t curWriteSize, remainPageSize;
@@ -277,7 +277,7 @@ uint8_t spiFlash_WriteNoChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
 *   page auto shift
 *   sector check and erase
 */
-uint8_t spiFlash_WriteWithChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
+uint8_t SPIFlash_WriteWithChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
 {
     uint8_t ret;
     //page program value
@@ -360,7 +360,7 @@ uint8_t spiFlash_WriteWithChk(uint8_t *pBuff, uint32_t Address, uint32_t wSize)
 }
 
 /* spi flash test */
-void spiFlash_RWTest(void)
+void SPIFlash_RWTest(void)
 {
     uint8_t testBuff[256];
     uint16_t i;
@@ -372,8 +372,8 @@ void spiFlash_RWTest(void)
     //for(i = 256; i > 0; i--) testBuff[256 - i] = i - 1;
 
     //W25Qxx_EraseSector(0);
-    //ret = spiFlash_WriteNoChk(testBuff, 0, 256);
-    ret = spiFlash_WriteWithChk(testBuff, 0, 256);
+    //ret = SPIFlash_WriteNoChk(testBuff, 0, 256);
+    ret = SPIFlash_WriteWithChk(testBuff, 0, 256);
     //ret = W25Qxx_PageProgram(testBuff, 0, 256);
     //W25Qxx_WaitBusy(0xfff);
     //if(ret != SPIFLASH_OK)
@@ -387,7 +387,7 @@ void spiFlash_RWTest(void)
     {
         testBuff[i] = 0;
     }
-    ret = spiFlash_Read(testBuff, 0, 256);
+    ret = SPIFlash_Read(testBuff, 0, 256);
     if(ret != SPIFLASH_OK)
     {
         printf("QSPI_Flash_RWTest read error, ret = %d\r\n", ret);

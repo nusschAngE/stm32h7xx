@@ -23,7 +23,7 @@ static SDRAM_HandleTypeDef SDRAM_Handler;
 
 /*  STATIC 
 */
-static void SDRAM_FMC_Init(void);
+static void sdram_FMCInit(void);
 static uint8_t sdram_SendCommand(uint8_t Bank, uint8_t Cmd, uint8_t Refresh, uint32_t RegVal);
 
 /******************* PUBLIC FUNCTION ************************/
@@ -91,11 +91,11 @@ void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef *hsdram)
 }
 
 /* SDRAM hardware initialize */
-void sdram_Init(void)
+void SDRAM_Init(void)
 {
     uint32_t temp = 0;
 
-    SDRAM_FMC_Init();
+    sdram_FMCInit();
     uSleep(500);
 
     /*  SDRAM init sequence
@@ -133,7 +133,7 @@ void sdram_Init(void)
     HAL_SDRAM_ProgramRefreshRate(&SDRAM_Handler, 781);
 }
 
-void sdram_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *bWrite)
+void SDRAM_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *bWrite)
 {
     uint32_t bw = 0;
 
@@ -155,7 +155,7 @@ void sdram_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *
     *bWrite = bw;
 }
 
-void sdram_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *bRead)
+void SDRAM_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *bRead)
 {
     uint32_t br = 0;
 
@@ -179,7 +179,7 @@ void sdram_ReadBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t rSize, uint32_t *b
 
 /****************** PRIVATE FUNCTION *******************/
 /* SDRAM controler init */
-static void SDRAM_FMC_Init(void)
+static void sdram_FMCInit(void)
 {
     FMC_SDRAM_TimingTypeDef SDRAM_Timing;
                                                      

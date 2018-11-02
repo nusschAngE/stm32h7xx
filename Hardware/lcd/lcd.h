@@ -45,18 +45,18 @@ extern LCD_Device lcdDev;
 
 
 /** public func **/
-void lcd_Init(void);
-void lcd_SetOnOff(uint8_t on);
-void lcd_SetBacklightOnOff(uint8_t on);
-void lcd_SetScanDirection(uint8_t dir);
-uint8_t lcd_SetWorkRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
-uint8_t lcd_FlushData(LCD_COLOR *pData, uint32_t size, uint8_t type);
-void lcd_Clear(LCD_COLOR color);
-uint8_t lcd_FieldBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR color);
-uint8_t lcd_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color);
-uint8_t lcd_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR *pColor);
-uint8_t lcd_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR fr, LCD_COLOR bg);
-uint16_t lcd_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_COLOR fr, LCD_COLOR bg);
+void LCD_Init(void);
+void LCD_SetOnOff(uint8_t on);
+void LCD_SetBacklightOnOff(uint8_t on);
+void LCD_SetScanDirection(uint8_t dir);
+uint8_t LCD_SetWorkRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+uint8_t LCD_FlushData(LCD_COLOR *pData, uint32_t size, uint8_t type);
+void LCD_Clear(LCD_COLOR color);
+uint8_t LCD_FieldBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR color);
+uint8_t LCD_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color);
+uint8_t LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR *pColor);
+uint8_t LCD_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR fr, LCD_COLOR bg);
+uint16_t LCD_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_COLOR fr, LCD_COLOR bg);
 
 
 #endif

@@ -10,12 +10,12 @@
 
 
 
-void irKey_Init(void)
+void IRKey_Init(void)
 {
 
 }
 
-IRCODE irKey_GetCode(void)
+IRCODE IRKey_GetCode(void)
 {
 
     return (0x00);

@@ -24,8 +24,8 @@ enum
 
 /*  FUNC
 */
-extern void ioKey_Init(void);
-extern KEY_SCAN_VAL ioKey_GetKey(void);
+extern void IOKey_Init(void);
+extern KEY_SCAN_VAL IOKey_GetKey(void);
 
 
 

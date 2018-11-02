@@ -92,7 +92,7 @@ static uint8_t GT9147_Scan(uint8_t mode);
 TP_Device tpDev;
 
 /* device init */
-void touch_Init(void)
+void TOUCH_Init(void)
 {
 #if (TOUCH_DRIVER_IC_GT9147)
     if(GT9147_Init() == TP_STA_OK)
@@ -113,20 +113,24 @@ static uint8_t GT9147_WriteRegister(uint16_t reg, uint8_t *sVal, uint8_t NumByte
 
 	T_IIC_Start();
 	T_IIC_SendByte(TOUCH_ADDRESS);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* reg msb */
 	tmp = (uint8_t)((reg & 0xff00) >> 8);
 	T_IIC_SendByte(tmp);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* reg lsb */
 	tmp = (uint8_t)(reg & 0x00ff);
 	T_IIC_SendByte(tmp);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* send data */
 	while(NumBytes--)
 	{
 		T_IIC_SendByte(*sVal);
-		if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+		if(T_IIC_WaitACK())	
+		    return (T_IIC_TIMEOUT);
 		/* next data */
 		sVal++;
 	}
@@ -142,21 +146,25 @@ static uint8_t GT9147_ReadRegister(uint16_t reg, uint8_t *rVal, uint8_t NumBytes
 
 	T_IIC_Start();
 	T_IIC_SendByte(TOUCH_ADDRESS);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* reg msb */
 	tmp = (uint8_t)((reg & 0xff00) >> 8);
 	T_IIC_SendByte(tmp);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* reg lsb */
 	tmp = (uint8_t)(reg & 0x00ff);
 	T_IIC_SendByte(tmp);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT); 
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT); 
 	/* restart */
 	T_IIC_Stop();
 	T_IIC_Start();
 	/* read sequence */
 	T_IIC_SendByte(TOUCH_ADDRESS + 1);
-	if(T_IIC_WaitACK())	return (T_IIC_TIMEOUT);
+	if(T_IIC_WaitACK())	
+	    return (T_IIC_TIMEOUT);
 	/* read data */
 	while(NumBytes--)
 	{

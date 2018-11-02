@@ -114,7 +114,7 @@ void HAL_SRAM_MspInit(SRAM_HandleTypeDef *hsram)
     HAL_GPIO_Init(LCD_BK_GPIO, &GPIO_Init); 
 }
 
-void lcd_Init(void)
+void LCD_Init(void)
 {
     SRAM_FMC_Init();
     uSleep(50000);
@@ -544,17 +544,17 @@ void lcd_Init(void)
     lcd_FieldBlock(0, 0 , 480 , 800, 0x0000);
 }
 
-void lcd_SetOnOff(uint8_t on)
+void LCD_SetOnOff(uint8_t on)
 {
     nt35510_write_reg(on ? NT35510_DISP_ON : NT35510_DISP_OFF);
 }
 
-void lcd_SetBacklightOnOff(uint8_t on)
+void LCD_SetBacklightOnOff(uint8_t on)
 {
     HAL_GPIO_WritePin(LCD_BK_GPIO, LCD_BK_PIN, (on ? GPIO_PIN_SET : GPIO_PIN_RESET));
 }
 
-void lcd_SetScanDirection(uint8_t dir)
+void LCD_SetScanDirection(uint8_t dir)
 {
 	uint16_t regval = 0;
 
@@ -619,7 +619,7 @@ void lcd_SetScanDirection(uint8_t dir)
 	nt35510_set_register(NT35510_MADCTL, regval);
 }
 
-uint8_t lcd_SetWorkRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+uint8_t LCD_SetWorkRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
     uint16_t tmp = 0;
 
@@ -645,7 +645,7 @@ uint8_t lcd_SetWorkRegion(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
     return (LCD_OK);
 }
 
-uint8_t lcd_FlushData(LCD_COLOR *pData, uint32_t size, uint8_t type)
+uint8_t LCD_FlushData(LCD_COLOR *pData, uint32_t size, uint8_t type)
 {
     nt35510_write_reg(NT35510_FLUSH_RAM);
 
@@ -659,7 +659,7 @@ uint8_t lcd_FlushData(LCD_COLOR *pData, uint32_t size, uint8_t type)
     return (LCD_OK);
 }
 
-void lcd_Clear(LCD_COLOR color)
+void LCD_Clear(LCD_COLOR color)
 {
     uint32_t wSize = DEFAULT_LCD_WIDTH * DEFAULT_LCD_HEIGHT;
 
@@ -667,7 +667,7 @@ void lcd_Clear(LCD_COLOR color)
     nt35510_flush_color(color, wSize);
 }
 
-uint8_t lcd_FieldBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR color)
+uint8_t LCD_FieldBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR color)
 {
     uint32_t wSize = width * height;
 
@@ -679,7 +679,7 @@ uint8_t lcd_FieldBlock(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
     return LCD_OK;
 }
     
-uint8_t lcd_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color)
+uint8_t LCD_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color)
 {
     if(x >= lcdDev.width || y >= lcdDev.height)
         return LCD_BC;
@@ -692,7 +692,7 @@ uint8_t lcd_DrawPoint(uint16_t x, uint16_t y, LCD_COLOR color)
     return LCD_OK;
 }
 
-uint8_t lcd_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR *pic)
+uint8_t LCD_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height, LCD_COLOR *pic)
 {
     uint32_t wSize = width * height;
 
@@ -705,7 +705,7 @@ uint8_t lcd_ShowPicture(uint16_t x, uint16_t y, uint16_t width, uint16_t height,
     return LCD_OK;
 }
 
-uint8_t lcd_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR fr, LCD_COLOR bg)
+uint8_t LCD_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR fr, LCD_COLOR bg)
 {
     uint32_t wSize = 0;
 
@@ -730,7 +730,7 @@ uint8_t lcd_ShowChar(uint16_t x, uint16_t y, uint8_t ch, uint8_t font, LCD_COLOR
 }
 
 /* return number of bytes be written */
-uint16_t lcd_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_COLOR fr, LCD_COLOR bg)
+uint16_t LCD_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_COLOR fr, LCD_COLOR bg)
 {
     uint16_t x0 = x, y0 = y;
     uint16_t bWrite = 0;
@@ -741,7 +741,7 @@ uint16_t lcd_ShowString(uint16_t x, uint16_t y, char* pStr, uint8_t font, LCD_CO
     while(pStr[bWrite] != '\0')
     {
         /* show one char */
-        lcd_ShowChar(x, y, pStr[bWrite], font, fr, bg);
+        LCD_ShowChar(x, y, pStr[bWrite], font, fr, bg);
         /* set next char's column */
         x += ASCFont[font].width;
         /* go to next char */

@@ -6,7 +6,7 @@
 
 
 /********************PUBLIC FUNCTION **********************/
-void ioKey_Init(void)
+void IOKey_Init(void)
 {
     GPIO_InitTypeDef GPIO_Initure;
 
@@ -36,7 +36,7 @@ void ioKey_Init(void)
     HAL_GPIO_Init(GPIOH, &GPIO_Initure);
 }
 
-KEY_SCAN_VAL ioKey_GetKey(void)
+KEY_SCAN_VAL IOKey_GetKey(void)
 {
     KEY_SCAN_VAL stat = 0x0000;
 

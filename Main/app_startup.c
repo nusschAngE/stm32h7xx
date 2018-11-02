@@ -70,8 +70,8 @@ void app_startup(void *p_arg)
 
     while(1)
     {
-        led_Onoff(LED_RED, FALSE);
-        led_Onoff(LED_GREEN, FALSE);
+        LED_Onoff(LED_RED, FALSE);
+        LED_Onoff(LED_GREEN, FALSE);
         OSTimeDlyHMSM(0, 0, 0, 10);
     }
 }

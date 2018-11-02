@@ -151,16 +151,16 @@ static uint16_t Field_FontGRAM_HZK(LCD_COLOR *ram, uint16_t size, uint16_t gbk, 
     switch (font)
     {
         case FONT_HZK12:
-            spiFlash_Read(FontData, ofs + FontInfo.hzk12Addr, bmpSize);
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk12Addr, bmpSize);
             break;
         case FONT_HZK16:
-            spiFlash_Read(FontData, ofs + FontInfo.hzk16Addr, bmpSize);
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk16Addr, bmpSize);
             break;
         case FONT_HZK24:
-            spiFlash_Read(FontData, ofs + FontInfo.hzk24Addr, bmpSize);
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk24Addr, bmpSize);
             break;
         case FONT_HZK32:
-            spiFlash_Read(FontData, ofs + FontInfo.hzk32Addr, bmpSize);
+            SPIFlash_Read(FontData, ofs + FontInfo.hzk32Addr, bmpSize);
             break;
         default : return 0;
     }

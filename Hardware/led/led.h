@@ -9,9 +9,9 @@
 #define LED_RED     2
 
 /****************** GLOBAL FUNCTION *****************/
-extern void led_Init(void);
-extern void led_Toggle(uint8_t led);
-extern void led_Onoff(uint8_t led, bool on);
+extern void LED_Init(void);
+extern void LED_Toggle(uint8_t led);
+extern void LED_Onoff(uint8_t led, bool on);
 
 #endif
 

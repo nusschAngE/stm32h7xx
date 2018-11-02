@@ -44,7 +44,7 @@ void irkpd_Task(void *p_arg)
 
     while(1)
     {
-        keyCode = irKey_GetCode();
+        keyCode = IRKey_GetCode();
 
         idx = -1;
         sendEvt = FALSE;

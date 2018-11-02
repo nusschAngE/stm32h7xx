@@ -42,14 +42,14 @@ int main(void)
 
     printf("hardware init...\r\n");
     /* hardware init */
-    sdram_Init();
-    spiFlash_Init();
-	lcd_Init();
-    led_Init();
-    ioKey_Init();
-    irKey_Init();
-	touch_Init();
-	//sdcard_Init();
+    SDRAM_Init();
+    SPIFlash_Init();
+	LCD_Init();
+    LED_Init();
+    IOKey_Init();
+    IRKey_Init();
+	TOUCH_Init();
+	//SD_Init();
 
     printf("system start...\r\n");
 /* user app */
@@ -60,7 +60,7 @@ int main(void)
 *   add demo code here
 */
     printf("demo start...\r\n");
-	lcd_ShowString(10, 10, "demo start...", FONT_ASC1608, 0xffff, 0x0000);
+	LCD_ShowString(10, 10, "demo start...", FONT_ASC1608, 0xffff, 0x0000);
     
 #if 0
 	SDRAM_RWTestFunc();
@@ -68,15 +68,11 @@ int main(void)
 #endif
 
 #if 0
-    spiFlash_RWTest();
+    SPIFlash_RWTest();
 #endif    
 
 #if 0
-    touchScan_Task();
-#endif
-
-#if 0
-	sdcard_Test();
+	SD_Test();
 #endif
 
 #if 0
@@ -98,8 +94,8 @@ int main(void)
 
 	while(1)
 	{
-	    led_Toggle(LED_RED);
-	    led_Toggle(LED_GREEN);
+	    LED_Toggle(LED_RED);
+	    LED_Toggle(LED_GREEN);
 		uSleep(500000);
 	}  
 	
@@ -108,7 +104,7 @@ int main(void)
 *   add user app code here
 */ 
     printf("app start...\r\n");
-    lcd_ShowString(10, 10, "app start...", FONT_ASC1608, 0xffff, 0x0000);
+    LCD_ShowString(10, 10, "app start...", FONT_ASC1608, 0xffff, 0x0000);
 #if (RTOS_uCOS_II)
     system_SysTickInit();
 

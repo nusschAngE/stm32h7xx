@@ -3,7 +3,7 @@
 #include "led.h"
 
 /********************* GLOBAL FUNCTION *****************************/
-void led_Init(void)
+void LED_Init(void)
 {
     GPIO_InitTypeDef GPIO_Init;
 
@@ -21,7 +21,7 @@ void led_Init(void)
     HAL_GPIO_Init(GPIOB, &GPIO_Init);
 }
 
-void led_Toggle(uint8_t led)
+void LED_Toggle(uint8_t led)
 {
     switch (led)
     {   
@@ -37,7 +37,7 @@ void led_Toggle(uint8_t led)
     }
 }
 
-void led_Onoff(uint8_t led, bool on)
+void LED_Onoff(uint8_t led, bool on)
 {
     switch (led)
     {   
