@@ -45,7 +45,7 @@ extern LCD_Device lcdDev;
 
 
 /** public func **/
-void LCD_Init(void);
+uint8_t LCD_Init(void);
 void LCD_SetOnOff(uint8_t on);
 void LCD_SetBacklightOnOff(uint8_t on);
 void LCD_SetScanDirection(uint8_t dir);

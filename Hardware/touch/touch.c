@@ -5,7 +5,7 @@
 
 /****************************************/
 
-#define T_IIC_DELAY(x)      uSleep(x)
+#define T_IIC_DELAY(x)      TimDelayUs(x)
 #define T_IIC_DELAY_TICK    (50)
 
 enum
@@ -25,7 +25,6 @@ static void T_IIC_SendNACK(void);
 static void T_IIC_Stop(void);
 
 /**************** PRIVATE FUNCTION*********************/
-#if (TOUCH_DRIVER_IC_GT9147)
 
 #define TOUCH_ADDRESS	(0x28)
 
@@ -80,11 +79,10 @@ const uint8_t GT9147_CFG_TBL[]=
 static uint8_t GT9147_WriteRegister(uint16_t reg, uint8_t *sVal, uint8_t NumBytes);
 static uint8_t GT9147_ReadRegister(uint16_t reg, uint8_t *rVal, uint8_t NumBytes);
 static void GT9147_Send_Cfg(uint8_t mode);
-static void GT9147_HardwareReset(void);
+static void GT9147_HWReset(void);
 static uint8_t GT9147_ReadInterrupt(void);
 static uint8_t GT9147_Init(void);
 static uint8_t GT9147_Scan(uint8_t mode);
-#endif
 
 /***************** PUBLIC FCUNTION *****************/
 
@@ -92,19 +90,22 @@ static uint8_t GT9147_Scan(uint8_t mode);
 TP_Device tpDev;
 
 /* device init */
-void TOUCH_Init(void)
+uint8_t TOUCH_Init(void)
 {
-#if (TOUCH_DRIVER_IC_GT9147)
     if(GT9147_Init() == TP_STA_OK)
+    {
         tpDev.scanFunc = GT9147_Scan;
+        return (1);
+    }
     else
-        printf("touch[GT9147] init error!\r\n");
-#endif
+    {
+        tpDev.scanFunc = NULL;
+        return (0);
+    }
 }
 
-/********************** PRIVATE FUNCTION **************************/
+/**************** PRIVATE FUNCTION *********************/
 
-#if (TOUCH_DRIVER_IC_GT9147)
 /*  GT9147
 */
 static uint8_t GT9147_WriteRegister(uint16_t reg, uint8_t *sVal, uint8_t NumBytes)
@@ -203,7 +204,7 @@ static void GT9147_Send_Cfg(uint8_t mode)
 
 
 /* GPIO Init */
-static void GT9147_HardwareReset(void)
+static void GT9147_HWReset(void)
 {
 	GPIO_InitTypeDef GPIO_Init;
 
@@ -225,10 +226,10 @@ static void GT9147_HardwareReset(void)
 
 	/* reset on */
 	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_8, GPIO_PIN_RESET);
-	uSleep(50000);
+	DelayUs(50000);
 	/* reset high, reset sequence done */
 	HAL_GPIO_WritePin(GPIOI, GPIO_PIN_8, GPIO_PIN_SET);
-	uSleep(10000);
+	DelayUs(10000);
 	
 	/* set INT pin input */
 	GPIO_Init.Pin = GPIO_PIN_7;
@@ -248,8 +249,8 @@ static uint8_t GT9147_Init(void)
 	uint8_t tmp[5], ret = 0;
 
 	T_IIC_Init();
-	GT9147_HardwareReset();
-	uSleep(100000);
+	GT9147_HWReset();
+	DelayUs(50000);
 
 	pkgMemset(tmp, 0, 5);
     /* read product ID */
@@ -270,7 +271,7 @@ static uint8_t GT9147_Init(void)
         GT9147_Send_Cfg(1);
     }
     /* init done */
-    uSleep(50000);
+    DelayUs(50000);
     tmp[0] = 0x00;
     GT9147_WriteRegister(GT_CTRL_REG, tmp, 1);
 
@@ -326,7 +327,6 @@ static uint8_t GT9147_Scan(uint8_t mode)
 
     return tp_point;
 }
-#endif
 
 /*  IIC function 
 */

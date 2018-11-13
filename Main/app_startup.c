@@ -8,6 +8,7 @@
 #include "iokpd_track.h"
 #include "irkpd_track.h"
 #include "tp_track.h"
+#include "temp_track.h"
 
 #include "app_startup.h"
 #include "gui_task.h"
@@ -20,6 +21,9 @@ __ALIGNED(4) OS_STK tpTaskStk[APP_CFG_TP_TASK_STK_SIZE];
 
 /* ui screen task stack */
 __ALIGNED(4) OS_STK guiTaskStk[APP_CFG_GUI_TASK_STK_SIZE];
+
+/* temperature track task stack */
+//__ALIGNED(4) OS_STK tempTaskStk[APP_CFG_TEMP_TASK_STK_SIZE];
 
 /* task body */
 void app_startup(void *p_arg)
@@ -62,7 +66,17 @@ void app_startup(void *p_arg)
                     APP_CFG_GUI_TASK_STK_SIZE, 
                     NULL, 
                     OS_TASK_OPT_STK_CHK);
-
+#if 0
+    OSTaskCreateExt(temperature_Task, 
+                    NULL, 
+                    &tempTaskStk[APP_CFG_TEMP_TASK_STK_SIZE - 1u], 
+                    APP_CFG_TEMP_TASK_PRIO, 
+                    APP_CFG_TEMP_TASK_PRIO, 
+                    &tempTaskStk[0u], 
+                    APP_CFG_TEMP_TASK_STK_SIZE, 
+                    NULL, 
+                    OS_TASK_OPT_STK_CHK);
+#endif
     /* delete startup task */
     OSTaskDel(APP_CFG_STARTUP_TASK_PRIO);
 

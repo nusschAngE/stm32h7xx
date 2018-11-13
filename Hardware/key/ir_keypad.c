@@ -10,9 +10,9 @@
 
 
 
-void IRKey_Init(void)
+uint8_t IRKey_Init(void)
 {
-
+    return (1);
 }
 
 IRCODE IRKey_GetCode(void)

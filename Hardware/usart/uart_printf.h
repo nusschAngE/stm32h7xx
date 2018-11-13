@@ -8,7 +8,7 @@
 
 #define PRINTF_BAUDRATE         (115200)
 
-extern void UartPrintf_Init(uint32_t BaudRate);
+extern uint8_t UartPrintf_Init(uint32_t BaudRate);
 extern void UartPrintf_SendChar(uint8_t ch);
 
 

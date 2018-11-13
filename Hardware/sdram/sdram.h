@@ -9,7 +9,7 @@
 #define SDRAM_ADDRESS           ((uint32_t)0xc0000000)/* FMC Bank5 SDRAM */
 
 
-extern void SDRAM_Init(void);
+extern uint8_t SDRAM_Init(void);
 
 #endif
 

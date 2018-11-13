@@ -10,12 +10,14 @@
 
 #include "sdram.h"
 #include "led.h"
+#include "io_expand.h"
 #include "lcd.h"
 #include "qspi_flash.h"
 #include "sdcard.h"
 #include "touch.h"
 #include "io_keypad.h"
 #include "ir_keypad.h"
+#include "ds18b20.h"
 
 
 #if (RTOS_uCOS_II)
@@ -29,27 +31,96 @@ static OS_STK StartupTaskStk[APP_CFG_STARTUP_TASK_STK_SIZE];
 int main(void)
 {
 	uint32_t Value = 0, Count = 0, i = 0;
+    uint8_t ret = 0;
 	
     /* mcu configuration */
     //HAL_MspInit();
     system_RCCConfig();
     system_SCBCacheConfig();
     system_MPUConfig();
-	uSleep(500);
+	DelayUs(500);
 
-    DelayModule_Init();
-    PrintfModule_Init();
+#if (RTOS_uCOS_II)
+    system_SysTickInit();
+#endif
 
+    ret = DelayModule_Init();
+    if(ret == 0)
+    {
+        SYS_ERROR();
+    }
+    
+    ret = PrintfModule_Init();
+    if(ret == 0)
+    {
+        SYS_ERROR();
+    }
+
+	printf("system core frequency = %d\r\n", SystemCoreClock);
     printf("hardware init...\r\n");
     /* hardware init */
-    SDRAM_Init();
-    SPIFlash_Init();
-	LCD_Init();
-    LED_Init();
-    IOKey_Init();
-    IRKey_Init();
-	TOUCH_Init();
-	//SD_Init();
+    ret = SDRAM_Init();
+    if(ret == 0)
+    {   
+        printf("SDRAM_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+    ret = IOExpand_Init();
+    if(ret == 0)
+    {   
+        printf("IOExpand_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+    ret = SPIFlash_Init();
+    if(ret == 0)
+    {   
+        printf("SPIFlash_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+	ret = LCD_Init();
+	if(ret == 0)
+    {   
+        printf("LCD_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+    ret = LED_Init();
+    if(ret == 0)
+    {   
+        printf("LED_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+    ret = IOKey_Init();
+    if(ret == 0)
+    {   
+        printf("IOKey_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+    ret = IRKey_Init();
+    if(ret == 0)
+    {   
+        printf("IRKey_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+	ret = TOUCH_Init();
+	if(ret == 0)
+    {   
+        printf("TOUCH_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
+    
+	ret = SD_Init();
+	if(ret == 0)
+    {   
+        printf("SD_Init(),ret error\r\n");
+        SYS_ERROR();
+    }
 
     printf("system start...\r\n");
 /* user app */
@@ -71,8 +142,12 @@ int main(void)
     SPIFlash_RWTest();
 #endif    
 
-#if 0
+#if 1
 	SD_Test();
+#endif
+
+#if 0
+    DS18B20_Test();
 #endif
 
 #if 0
@@ -96,7 +171,7 @@ int main(void)
 	{
 	    LED_Toggle(LED_RED);
 	    LED_Toggle(LED_GREEN);
-		uSleep(500000);
+		TimDelayMs(500);
 	}  
 	
 #else 
@@ -106,7 +181,7 @@ int main(void)
     printf("app start...\r\n");
     LCD_ShowString(10, 10, "app start...", FONT_ASC1608, 0xffff, 0x0000);
 #if (RTOS_uCOS_II)
-    system_SysTickInit();
+    //system_SysTickInit();
 
     OSInit();
 

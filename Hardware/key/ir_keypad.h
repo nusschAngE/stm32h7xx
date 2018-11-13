@@ -8,7 +8,7 @@ typedef unsigned char   IRCODE;
 
 /*  func
 */
-extern void IRKey_Init(void);
+extern uint8_t IRKey_Init(void);
 extern IRCODE IRKey_GetCode(void);
 
 #endif

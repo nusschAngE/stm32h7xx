@@ -11,6 +11,8 @@
 #include "iokpd_track.h"
 #include "irkpd_track.h"
 #include "tp_track.h"
+#include "temp_track.h"
+#include "ds18b20.h"
 #include "lcd.h"
 
 /* TEST */
@@ -45,6 +47,18 @@ void gui_Task(void *p_arg)
 			handled = UiAppIODemo(&evt, NULL);
 			handled = UiAppTPDemo(&evt, NULL);
 		}
+
+#if 0
+		{
+            uint16_t value = 0;
+            char *pStr = NULL;
+            if(TempAcceptMbox(&value))
+            {
+                pStr = DS18B20_Temp2String( DS18B20_CaculateTemperature(value) );
+                LCD_ShowString(10, 32, pStr, FONT_ASC1608, 0xffff, 0x0000);
+            }
+		}
+#endif
 #else
         if(ret)
         {
@@ -78,47 +92,47 @@ bool UiAppIODemo(UiEvent *evt, void *arg)
 	{
 		case UI_EVT_IO(IO_EVT_UP, IO_KEY_DOWN)://up
 		case UI_EVT_IO(IO_EVT_UP, IO_KEY_REPEAT):
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_y -= 40;
 			if(prev_y < 0)
 			{
 				prev_y = DEFAULT_LCD_HEIGHT - 40;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
 			break;
 
 		case UI_EVT_IO(IO_EVT_DOWN, IO_KEY_DOWN)://down 
 		case UI_EVT_IO(IO_EVT_DOWN, IO_KEY_REPEAT):
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_y += 40;
 			if(prev_y >= DEFAULT_LCD_HEIGHT)
 			{
 				prev_y = 0;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
 			break;
 
 		
 		case UI_EVT_IO(IO_EVT_LEFT, IO_KEY_DOWN)://left 
 		case UI_EVT_IO(IO_EVT_LEFT, IO_KEY_REPEAT):
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_x -= 40;
 			if(prev_x < 0)
 			{
 				prev_x = DEFAULT_LCD_WIDTH - 40;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
 			break;
 		
 		case UI_EVT_IO(IO_EVT_RIGHT, IO_KEY_DOWN)://right 
 		case UI_EVT_IO(IO_EVT_RIGHT, IO_KEY_REPEAT):
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_x += 40;
 			if(prev_x >= DEFAULT_LCD_WIDTH)
 			{
 				prev_x = 0;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0xffff);	
 			break;
 	}
 
@@ -133,66 +147,66 @@ bool UiAppTPDemo(UiEvent *evt, void *arg)
 	switch (evt->code)
 	{
 		case UI_EVT_TP_GESTURE(TP_GESTURE_SLIDE_UP)://up
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_y -= 40;
 			if(prev_y < 0)
 			{
 				prev_y = DEFAULT_LCD_HEIGHT - 40;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 			break;
 
 		case UI_EVT_TP_GESTURE(TP_GESTURE_SLIDE_DOWN)://down 
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_y += 40;
 			if(prev_y >= DEFAULT_LCD_HEIGHT)
 			{
 				prev_y = 0;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 			break;
 
 		
 		case UI_EVT_TP_GESTURE(TP_GESTURE_SLIDE_LEFT)://left 
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_x -= 40;
 			if(prev_x < 0)
 			{
 				prev_x = DEFAULT_LCD_WIDTH - 40;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 			break;
 		
 		case UI_EVT_TP_GESTURE(TP_GESTURE_SLIDE_RIGHT)://right 
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
 			prev_x += 40;
 			if(prev_x >= DEFAULT_LCD_WIDTH)
 			{
 				prev_x = 0;
 			}
-			lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 			break;
 
 	    case UI_EVT_TP_PRESS(TP_KEY_UP_BEFORE_HOLD):
-            //lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+            //LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
             //UiTpEventGetXY(evt, &prev_x, &prev_y);
-			//lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			//LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 	        break;
 
 	    case UI_EVT_TP_PRESS(TP_KEY_HOLD):
 	    case UI_EVT_TP_PRESS(TP_KEY_REPEAT):
-            //lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+            //LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
             //if(color == 0)
             //    color = 0xffff;
             //color <<= 1;
-			//lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			//LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 	        break;
 
         //case UI_EVT_TP_PRESS(TP_KEY_UP_BEFORE_HOLD):
 	    case UI_EVT_TP_PRESS(TP_KEY_UP_AFTER_HOLD):
-            //lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
+            //LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, 0x0000);
             //color = 0xffff;
-			//lcd_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
+			//LCD_FieldBlock((uint16_t)prev_x, (uint16_t)prev_y, 40, 40, color);	
 	        break;
 	}
 

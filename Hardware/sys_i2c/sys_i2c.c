@@ -3,7 +3,7 @@
 #include "sys_i2c.h"
 #include "delay.h"
 
-#define IIC_DELAY(x)    uSleep(x)
+#define IIC_DELAY(x)    TimDelayUs(x)
 #define IIC_DELAY_TICKS (50)
 
 #define SCL_GPIO        GPIOH
@@ -21,6 +21,8 @@
 
 //#define IIC_SDA_READ()      HAL_GPIO_ReadPin(SDA_GPIO, SDA_PIN)
 
+static bool SystemIIC_Init = FALSE;
+
 /*  STATIC 
 */
 static inline void IIC_SDA_ConfigAsOutput(void);
@@ -34,13 +36,18 @@ void SYSI2C_Init(void)
 {
     GPIO_InitTypeDef GPIO_Init;
 
-    __HAL_RCC_GPIOH_CLK_ENABLE();
+    if(SystemIIC_Init != TRUE)
+    {
+        __HAL_RCC_GPIOH_CLK_ENABLE();
 
-    GPIO_Init.Pin = SCL_PIN | SDA_PIN;
-    GPIO_Init.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_Init.Pull = GPIO_PULLUP;
-    GPIO_Init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    HAL_GPIO_Init(GPIOH, &GPIO_Init);    
+        GPIO_Init.Pin = SCL_PIN | SDA_PIN;
+        GPIO_Init.Mode = GPIO_MODE_OUTPUT_PP;
+        GPIO_Init.Pull = GPIO_PULLUP;
+        GPIO_Init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        HAL_GPIO_Init(GPIOH, &GPIO_Init);
+
+        SystemIIC_Init = TRUE;
+    }
 }
 
 void SYSI2C_Start(void)
@@ -144,7 +151,7 @@ void SYSI2C_Stop(void)
     IIC_SCL_Set(0);
     IIC_DELAY(2);
     IIC_SDA_Set(0);    
-    T_SDA_ConfigAsOutput();
+    IIC_SDA_ConfigAsOutput();
     IIC_DELAY(2);
 
     IIC_SCL_Set(1);

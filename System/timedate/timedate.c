@@ -19,13 +19,13 @@ volatile uint64_t systemTime = 0;
 
 uint8_t TimeDateCaculate(TimeDate_Typedef *dt)
 {
-    
+    return (1);
 }
 
 /* 0 : invalide, 1~7 : week */
 uint8_t WeekCaculate(TimeDate_Typedef dt)
 {
-    
+    return (1);
 }
 
 

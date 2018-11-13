@@ -17,7 +17,7 @@ static uint8_t PCF85xx_SendByte(uint8_t sVal);
 static uint8_t PCF85xx_ReadByte(uint8_t *rVal);
 
 /**************** PUBLIC FUNCTION ****************/
-void IOExpand_Init(void)
+uint8_t IOExpand_Init(void)
 {
     GPIO_InitTypeDef GPIO_Init;
 
@@ -27,16 +27,18 @@ void IOExpand_Init(void)
     GPIO_Init.Mode = GPIO_MODE_OUTPUT_PP;
     GPIO_Init.Pull = GPIO_NOPULL;
     GPIO_Init.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    HAL_GPIO_Init(=GPIOB, &GPIO_Init);
+    HAL_GPIO_Init(GPIOB, &GPIO_Init);
+
+	SYSI2C_Init();
 
     IOExStatus = 0xFF;//all IO set high
     if(PCF85xx_Init() == 1)
     {
-        printf("IOExpand_Init() done\r\n");
+        return (1);
     }
     else
     {
-        printf("IOExpand_Init() error\r\n");
+        return (0);
     }
 }
 

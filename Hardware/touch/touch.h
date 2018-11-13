@@ -52,6 +52,6 @@ typedef struct
 /* TP DEVICE */
 extern TP_Device tpDev;
 
-extern void TOUCH_Init(void);
+extern uint8_t TOUCH_Init(void);
 #endif
 

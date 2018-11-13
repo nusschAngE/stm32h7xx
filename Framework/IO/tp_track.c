@@ -24,10 +24,15 @@ static inline void tp_SendEvent(TpEvent *evt);
 
 void tp_track_Init(void)
 {
-    tpEvt.flag = 0;
-    tpEvt.point = 0;
-    tpEvt.gesture = 0;
-    holdCnt = 0;
+    tpEvt[0].flag = 0;
+    tpEvt[0].point = 0;
+    tpEvt[0].gesture = 0;
+	 
+	tpEvt[1].flag = 0;
+    tpEvt[1].point = 0;
+    tpEvt[1].gesture = 0;
+    
+		holdCnt = 0;
 }
 
 void tp_Task(void *p_arg)
@@ -60,10 +65,10 @@ void tp_Task(void *p_arg)
                 tpEvt[0].xPos = tpEvt[1].xPos = tpDev.xPos[0];
                 tpEvt[0].yPos = tpEvt[1].yPos = tpDev.yPos[0];
 
-                xShift = xTmp - tpEvt.xPos;
+                xShift = xTmp - tpEvt[0].xPos;
                 if(xShift < 0)  xShift = 0 - xShift;
                 
-                yShift = yTmp - tpEvt.yPos;
+                yShift = yTmp - tpEvt[0].yPos;
                 if(yShift < 0)  yShift = 0 - yShift;
 
                 if(holdCnt > 64999)
@@ -175,9 +180,14 @@ void tp_Task(void *p_arg)
 		if(actPoint == 0)
 		{
 			/* clear state */
-			tpEvt.flag = 0;
-			tpEvt.point = 0;
-			tpEvt.gesture = 0;
+			tpEvt[0].flag = 0;
+			tpEvt[0].point = 0;
+			tpEvt[0].gesture = 0;
+			
+			tpEvt[1].flag = 0;
+      		tpEvt[1].point = 0;
+      		tpEvt[1].gesture = 0;
+			
 			holdCnt = 0;
 			xTmp = yTmp = 0;
 		}

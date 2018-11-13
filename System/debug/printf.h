@@ -4,7 +4,7 @@
 
 #include "public.h"
 
-extern void PrintfModule_Init(void);
+extern uint8_t PrintfModule_Init(void);
 
 extern int printf(const char *format, ...);
 

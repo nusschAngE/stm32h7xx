@@ -18,7 +18,7 @@
 #define IO_ALL_PIN          (0xFF)
 
 /* public */
-void IOExpand_Init(void);
+uint8_t IOExpand_Init(void);
 void IOExpand_SetIOx(uint8_t IOx, uint8_t sta);
 uint8_t IOExpand_GetIOx(uint8_t IOx);
 void IOExpand_IntCheck(void);

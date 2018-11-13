@@ -521,7 +521,7 @@ HAL_StatusTypeDef HAL_SD_ReadBlocks(SD_HandleTypeDef *hsd, uint8_t *pData, uint3
       hsd->State = HAL_SD_STATE_READY;
       return HAL_ERROR;
     }
-      
+    
     /* Poll on SDMMC flags */
     while(!__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_RXOVERR | SDMMC_FLAG_DCRCFAIL | SDMMC_FLAG_DTIMEOUT | SDMMC_FLAG_DATAEND))
     {
@@ -678,7 +678,7 @@ HAL_StatusTypeDef HAL_SD_WriteBlocks(SD_HandleTypeDef *hsd, uint8_t *pData, uint
       if(errorstate != HAL_SD_ERROR_NONE)
       {
       /* Clear all the static flags */
-      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_FLAGS);  
+      __HAL_SD_CLEAR_FLAG(hsd, SDMMC_STATIC_FLAGS); 
         hsd->ErrorCode |= errorstate;
       hsd->State = HAL_SD_STATE_READY;
         return HAL_ERROR;

@@ -6,9 +6,9 @@
 
 /*********** usart debug configuration *************/
 
-void PrintfModule_Init(void)
+uint8_t PrintfModule_Init(void)
 {
-    UartPrintf_Init(PRINTF_BAUDRATE);
+    return UartPrintf_Init(PRINTF_BAUDRATE);
 }
 
 /********** printf config ***********/

@@ -3,10 +3,10 @@
 
 #include "public.h"
 
-#define SDCARD_DMA_MODE     (1U)
+//#define SDCARD_DMA_MODE     (1U)
 
 
-typedef enum
+enum
 {
     SD_RESET                  = ((uint32_t)0x00000000U),  /*!< SD not yet initialized or disabled  */
     SD_READY                  = ((uint32_t)0x00000001U),  /*!< SD initialized and ready for use    */

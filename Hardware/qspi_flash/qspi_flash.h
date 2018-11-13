@@ -41,7 +41,7 @@ enum
 /**************************** PUBLIC FUNCTION *******************************/
 
 /* public function */
-void SPIFlash_Init(void);
+uint8_t SPIFlash_Init(void);
 uint8_t SPIFlash_EraseSectors(uint32_t StartSector, uint32_t SectorNbr);
 uint8_t SPIFlash_Read(uint8_t *pBuff, uint32_t Address, uint16_t rSize);
 /* SPI Flash write, not check */

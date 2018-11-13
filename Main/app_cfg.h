@@ -57,12 +57,12 @@
 #define  OS_TASK_TMR_PRIO               (OS_LOWEST_PRIO - 2u)  /* Only required for uC/OS-II                           */
 
 #define  APP_CFG_STARTUP_TASK_PRIO      (3u)
-#define  APP_CFG_TEST_TASK_PRIO		    (4U)
 
 #define APP_CFG_GUI_TASK_PRIO           (15U)
 #define APP_CFG_IOKPD_TASK_PRIO         (16U)
 #define APP_CFG_IRKPD_TASK_PRIO         (17U)
 #define APP_CFG_TP_TASK_PRIO            (18U)
+#define APP_CFG_TEMP_TASK_PRIO          (19U)
 
 /*
 *********************************************************************************************************
@@ -77,7 +77,7 @@
 #define APP_CFG_IOKPD_TASK_STK_SIZE         (256U)
 #define APP_CFG_IRKPD_TASK_STK_SIZE         (256U)
 #define APP_CFG_TP_TASK_STK_SIZE            (256U)
-
+#define APP_CFG_TEMP_TASK_STK_SIZE          (128U)
 
 /*
 *********************************************************************************************************

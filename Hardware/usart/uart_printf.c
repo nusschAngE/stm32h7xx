@@ -26,7 +26,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
     HAL_GPIO_Init(GPIOA, &GPIO_Init);	   		  
 }
 
-void UartPrintf_Init(uint32_t BaudRate)
+uint8_t UartPrintf_Init(uint32_t BaudRate)
 {
 	DBGUart_Handler.Instance = USART1;					
 	DBGUart_Handler.Init.BaudRate = BaudRate;				  
@@ -39,7 +39,14 @@ void UartPrintf_Init(uint32_t BaudRate)
 	DBGUart_Handler.Init.OverSampling = UART_OVERSAMPLING_16;
 	DBGUart_Handler.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
 	DBGUart_Handler.Init.FIFOMode = UART_FIFOMODE_DISABLE;
-	HAL_UART_Init(&DBGUart_Handler);		   
+	if(HAL_UART_Init(&DBGUart_Handler) == HAL_OK)
+	{
+	    return (1);
+	}
+	else
+	{
+	    return (0);
+	}
 }
 
 void UartPrintf_SendChar(uint8_t ch)

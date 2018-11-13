@@ -28,6 +28,9 @@ typedef unsigned int  size_t;
 typedef unsigned char bool;
 
 
+/* system error, loop */
+#define SYS_ERROR()     do{} while(1)
+
 /******** uC/OS ***********/
 #define RTOS_uCOS_II    1U
 

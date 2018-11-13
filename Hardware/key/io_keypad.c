@@ -6,7 +6,7 @@
 
 
 /********************PUBLIC FUNCTION **********************/
-void IOKey_Init(void)
+uint8_t IOKey_Init(void)
 {
     GPIO_InitTypeDef GPIO_Initure;
 
@@ -34,6 +34,8 @@ void IOKey_Init(void)
     GPIO_Initure.Pull = GPIO_PULLUP;         
     GPIO_Initure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     HAL_GPIO_Init(GPIOH, &GPIO_Initure);
+
+    return (1);
 }
 
 KEY_SCAN_VAL IOKey_GetKey(void)

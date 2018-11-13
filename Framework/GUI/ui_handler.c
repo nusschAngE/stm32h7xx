@@ -30,7 +30,7 @@ static inline void UiFieldClearDisplay(UiField *inField)
 
     if(IsDisplayTopScreen() == FALSE)   return ;
 
-    lcd_FieldBlock(field->x, field->y, field->w, field->h, field->color);
+    LCD_FieldBlock(field->x, field->y, field->w, field->h, field->color);
 }
 
 
@@ -40,7 +40,7 @@ static inline void UiFieldBlockDisplay(UiField *inField)
 
     if(IsDisplayTopScreen() == FALSE)   return ;
 
-    lcd_FieldBlock(field->x, field->y, field->w, field->h, field->color);
+    LCD_FieldBlock(field->x, field->y, field->w, field->h, field->color);
 }
 
 /* UI Field handler */

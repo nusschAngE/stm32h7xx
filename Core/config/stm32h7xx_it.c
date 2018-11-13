@@ -150,12 +150,12 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
-#if (!RTOS_uCOS_II)
-void PendSV_Handler(void)
-{
-
-}
-#endif
+//#if (!RTOS_uCOS_II)
+//void PendSV_Handler(void)
+//{
+//
+//}
+//#endif
 
 /**
   * @brief  This function handles SysTick Handler.
@@ -179,20 +179,7 @@ void SysTick_Handler(void)
     OSIntExit();                                                /* Tell uC/OS-II that we are leaving the ISR            */
 
 #endif
-    HAL_IncTick();
-    /* systick delay process */
-    if(delayTicksCnt)
-    {
-        delayTicksCnt--;
-    }
-
-    /* system time */
-    systemCount++;
-    if(systemCount == COUNTS_PER_SECOND)
-    {
-        systemCount = 0;
-        systemTime++;
-    }
+	HAL_IncTick();
 }
 
 /**

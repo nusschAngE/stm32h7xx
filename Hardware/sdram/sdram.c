@@ -91,19 +91,20 @@ void HAL_SDRAM_MspInit(SDRAM_HandleTypeDef *hsdram)
 }
 
 /* SDRAM hardware initialize */
-void SDRAM_Init(void)
+uint8_t SDRAM_Init(void)
 {
     uint32_t temp = 0;
+    uint8_t ret = 0;
 
     sdram_FMCInit();
-    uSleep(500);
+    DelayUs(500);
 
     /*  SDRAM init sequence
     */
-    sdram_SendCommand(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); //sdram clock enable
-    uSleep(300);                                        //must delay more than 200us
-	sdram_SendCommand(0, FMC_SDRAM_CMD_PALL, 1, 0);       //Precharge 
-    sdram_SendCommand(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);//auto refresh times
+    ret = sdram_SendCommand(0, FMC_SDRAM_CMD_CLK_ENABLE, 1, 0); //sdram clock enable
+    DelayUs(300);                                        //must delay more than 200us
+	ret = sdram_SendCommand(0, FMC_SDRAM_CMD_PALL, 1, 0);       //Precharge 
+    ret = sdram_SendCommand(0, FMC_SDRAM_CMD_AUTOREFRESH_MODE, 8, 0);//auto refresh times
 
     /*
     *   mode register
@@ -119,7 +120,7 @@ void SDRAM_Init(void)
             | SDRAM_MODEREG_CAS_LATENCY_3           	
             | SDRAM_MODEREG_OPERATING_MODE_STANDARD   
             | SDRAM_MODEREG_WRITEBURST_MODE_SINGLE;    
-    sdram_SendCommand(0,FMC_SDRAM_CMD_LOAD_MODE,1,temp); 
+    ret = sdram_SendCommand(0,FMC_SDRAM_CMD_LOAD_MODE,1,temp); 
 
     /*
     *   SDRAM refresh rate
@@ -131,6 +132,8 @@ void SDRAM_Init(void)
     *   COUNT = 7.81(us) * 100(mhz) #- 20# = 781
     */
     HAL_SDRAM_ProgramRefreshRate(&SDRAM_Handler, 781);
+
+    return (ret);
 }
 
 void SDRAM_WriteBuffer(uint8_t *pBuff, uint32_t Addr, uint32_t wSize, uint32_t *bWrite)

@@ -43,6 +43,7 @@ void system_RCCConfig(void)
   	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   	RCC_OscInitStruct.HSIState = RCC_HSI_OFF;
+  	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   	RCC_OscInitStruct.HSICalibrationValue = 16;
   	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
@@ -101,12 +102,16 @@ void system_RCCConfig(void)
   	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART16//uart1&6
   	                                            | RCC_PERIPHCLK_SDMMC
   	                                            | RCC_PERIPHCLK_QSPI //200mhz
-  	                                            | RCC_PERIPHCLK_FMC;//200mhz
+  	                                            | RCC_PERIPHCLK_FMC//200mhz
+  	                                            | RCC_PERIPHCLK_TIM//100mhz
+  	                                            | RCC_PERIPHCLK_USB;
   	/* Peripheral Clock Source Selection */                                            
   	PeriphClkInitStruct.FmcClockSelection = RCC_FMCCLKSOURCE_PLL;//PLL1Q, PLL2R
   	PeriphClkInitStruct.Usart16ClockSelection = RCC_USART16CLKSOURCE_PLL3;//PLL2Q, PLL3Q
   	PeriphClkInitStruct.QspiClockSelection = RCC_QSPICLKSOURCE_PLL;//PLL1Q, PLL2R
   	PeriphClkInitStruct.SdmmcClockSelection = RCC_SDMMCCLKSOURCE_PLL;//PLL1Q, PLL2R
+  	PeriphClkInitStruct.TIMPresSelection = RCC_TIMPRES_ACTIVATED;
+  	PeriphClkInitStruct.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
   	/* Peripheral Clock Configuration */
   	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   	{
