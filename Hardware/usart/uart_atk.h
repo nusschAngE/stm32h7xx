@@ -1,0 +1,29 @@
+
+#ifndef _UART_ATK_H
+#define _UART_ATK_H
+
+#include "public.h"
+
+typedef void (*ATK_RxParserCallback)(uint8_t data);
+typedef void (*ATK_RxCpltCallback)(void);
+typedef void (*ATK_TxCpltCallback)(void);
+typedef void (*ATK_ErrorCallback)(void);
+
+typedef struct
+{
+    uint32_t mode;
+    uint32_t baudrate;
+    ATK_RxParserCallback rxParserFunc;
+    ATK_RxCpltCallback rxCpltProcFunc;
+    ATK_TxCpltCallback txCpltProcFunc;
+    ATK_ErrorCallback errorProcFunc;
+}ATKUart_DevTypedef;
+
+/* PUBLIC FUNCTION */
+uint8_t ATKUart_Init(ATKUart_DevTypedef *dev);
+void ATKUart_DeInit(ATKUart_DevTypedef *dev);
+void ATKUart_TransmitIT(uint8_t *pData, uint16_t size);
+void ATKUart_ReceiveIT(uint8_t *pBuff, uint16_t size);
+
+#endif
+
